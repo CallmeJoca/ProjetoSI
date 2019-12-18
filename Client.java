@@ -9,6 +9,8 @@ public class Client {
     public static void main(String[] args) {
         
         try {
+            // criação da socket para a usar na comunicação com o servidor
+            //                    | Server IP   | Server Port
             Socket s = new Socket("192.168.43.27", 6666);
             DataOutputStream dout = new DataOutputStream(s.getOutputStream());
             dout.writeUTF("Hello Server");
