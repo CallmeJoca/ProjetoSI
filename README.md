@@ -6,13 +6,13 @@
 - [x] Lista
 - [ ] Distribuição
 - [ ] Entregua de cada trabalho
-### Gestão de passwords <Margarida>
+### Gestão de passwords [Margarida]
 - [ ] Password Based Key Derivation Function 2 (PBKDF2)
-### Troca de segredos <Henrique>
+### Troca de segredos [Henrique]
 - [ ] protocolo de acordo de chaves DiffieHellman
 - [ ] Puzzles de Merkle
 - [ ] RSA (Rivest, Shamir e Adleman)
-### Distribuição <David>
+### Distribuição [David]
 - [ ] distribuição de novas chaves geradas com base em chaves pré-distribuídas
 - [ ] definir um agente de confiança para distribuição de novas chave (configurar para uma das instâncias ser o agente, ex: o dono do "chat")
 ### Certezas
@@ -24,29 +24,29 @@
 - [ ] Client Line Interface (CLI) OU
 - [ ] Graphical User Interface (GUI)
 ### Modos
-- [ ] Cliente <Tiago>
+- [ ] Cliente [Tiago]
 - - [ ] Pedir o IP
 - - [ ] Pedir a porta de destino
-- [ ] Servidor <Jorge>
+- [ ] Servidor [Jorge]
 - - [ ] Pedir a porta que fica a ouvir
 - - [ ] lista de utilizadores disponíveis
 - - [ ] fazer ligação entre eles
 
 ## Mais pontos
 ### Funcionalidades
-- [ ] certificados digitais X.509 no RSA <Henrique>
-- [ ] infraestrutura de chave pública para o sistema e validar cadeias de certificados no RSA <Henrique>
-- [ ] fornecer certificados digitais a utilizadores <David> 
-- [ ] implementar mecanismos de assinatura digital para verificação de integridade em trocas de chave efémeras no Diffie-Hellman <Henrique>
-- [ ] help bastante completo e ser de simples utilização <quem for o primeiro a terminar tudo>
+- [ ] certificados digitais X.509 no RSA [Henrique]
+- [ ] infraestrutura de chave pública para o sistema e validar cadeias de certificados no RSA [Henrique]
+- [ ] fornecer certificados digitais a utilizadores [David] 
+- [ ] implementar mecanismos de assinatura digital para verificação de integridade em trocas de chave efémeras no Diffie-Hellman [Henrique]
+- [ ] help bastante completo e ser de simples utilização [quem for o primeiro a terminar tudo]
 ### Opções
-- [ ] diferentes algoritmos de cifra para os Puzzles de Merkle <Henrique>
-- [ ] diferentes funções de hash para o PBKDF2 <Margarida>
+- [ ] diferentes algoritmos de cifra para os Puzzles de Merkle [Henrique]
+- [ ] diferentes funções de hash para o PBKDF2 [Margarida]
 ## No final
 - [ ] Descobrir falhas
 - [ ] Descrever no relatório
 ## Relatório
-- [ ] Relatorio <quem terminar começam a fazer o relatório>
+- [ ] Relatorio [quem terminar começam a fazer o relatório]
 ## Enunciado
 O objetivo principal deste trabalho é implementar um sistema que permita `trocar segredos
 criptográficos entre duas entidades de uma forma fiável e segura`.
