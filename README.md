@@ -5,21 +5,19 @@
 ### Organização
 - [x] Lista
 - [ ] Distribuição
-- [ ] Entregue de cada trabalho
-### Geração password
+- [ ] Entregua de cada trabalho
+### Gestão de passwords
 - [ ] Password Based Key Derivation Function 2 (PBKDF2)
-### Troca segredo
+### Troca de segredos
 - [ ] protocolo de acordo de chaves DiffieHellman <Henrique?>
 - [ ] Puzzles de Merkle
 - [ ] RSA (Rivest, Shamir e Adleman)
 ### Distruibuição
-- [ ] chaves pré-distribuídas
-- [ ] agente de confiança (configurar para uma das instâncias ser o agente, ex: o dono do "chat")
+- [ ] distribuição de novas chaves geradas com base em chaves pré-distribuídas
+- [ ] definir um agente de confiança para distribuição de novas chave (configurar para uma das instâncias ser o agente, ex: o dono do "chat")
 ### Certezas
-- [ ] o segredo é igual dos dois lados
-- [ ] fiável, seguro
-
-## Mais pontos
+- [ ] imutabilidade (o segredo é igual dos dois lados)
+- [ ] segurança (fiável, seguro, secreto)
 ### Métodos
 - [ ] Client Line Interface (CLI) OU
 - [ ] Graphical User Interface (GUI)
@@ -31,6 +29,8 @@
 - - [ ] Pedir a porta que fica a ouvir
 - - [ ] lista de utilizadores disponíveis
 - - [ ] fazer ligação entre eles
+
+## Mais pontos
 ### Funcionalidades
 - [ ] certificados digitais X.509 no RSA
 - [ ] infraestrutura de chave pública para o sistema e validar cadeias de certificados no RSA
