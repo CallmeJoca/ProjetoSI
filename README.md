@@ -12,7 +12,7 @@
 - [ ] protocolo de acordo de chaves DiffieHellman <Henrique?>
 - [ ] Puzzles de Merkle
 - [ ] RSA (Rivest, Shamir e Adleman)
-### Distruibuição
+### Distribuição
 - [ ] distribuição de novas chaves geradas com base em chaves pré-distribuídas
 - [ ] definir um agente de confiança para distribuição de novas chave (configurar para uma das instâncias ser o agente, ex: o dono do "chat")
 ### Certezas
