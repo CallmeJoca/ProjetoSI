@@ -28,7 +28,8 @@
 - - [ ] Pedir o IP
 - - [ ] Pedir a porta de destino
 - [ ] Servidor [Jorge]
-- - [ ] Pedir a porta que fica a ouvir
+- - [ ] Informar o IP do servidor
+- - [ ] Informar a porta que fica a ouvir
 - - [ ] lista de utilizadores disponíveis
 - - [ ] fazer ligação entre eles
 
