@@ -2,7 +2,6 @@ package Server.src.server;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 
 public class Cliente {
@@ -14,7 +13,7 @@ public class Cliente {
             try {
                 input = inputHandler.input();
                 if (!input.equals("")){
-                    Socket s = new Socket("192.168.1.84", 6666);
+                    Socket s = new Socket("localhost", 6666);
                     DataOutputStream dout = new DataOutputStream(s.getOutputStream());
                     dout.writeUTF(input);
                     dout.flush();
@@ -28,7 +27,3 @@ public class Cliente {
         inputHandler.close();
     }
 }
-
-//192.168.43.27 doutra pessoa
-//192.168.1.75 computer
-//192.168.1.84 laptop
