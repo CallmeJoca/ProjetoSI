@@ -8,21 +8,24 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        InputHandler inputHandler = new InputHandler();
         String input = "";
         do {
             try {
-                input = scanner.next();
-                Socket s = new Socket("192.168.1.84", 6666);
-                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                dout.writeUTF(input);
-                dout.flush();
-                dout.close();
-                s.close();
+                input = inputHandler.input();
+                if (!input.equals("")){
+                    Socket s = new Socket("192.168.1.84", 6666);
+                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                    dout.writeUTF(input);
+                    dout.flush();
+                    dout.close();
+                    s.close();
+                }
             } catch (Exception e) {
                 System.out.println(e);
             }
         } while (!input.equals("end")) ;
+        inputHandler.close();
     }
 }
 
