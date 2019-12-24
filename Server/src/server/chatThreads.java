@@ -21,13 +21,35 @@ public class chatThreads extends Thread {
     @Override
     public void run() {
         
-        final PipedOutputStream output = new PipedOutputStream();
+        final PipedOutputStream outputToClient2 = new PipedOutputStream();
         try {
-            final PipedInputStream  input  = new PipedInputStream(output);
+            final PipedInputStream  inputFromClient1  = new PipedInputStream(outputToClient2);
         } catch (IOException ex) {
-            Logger.getLogger(chatThreads.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+        final PipedOutputStream outputToClient1 = new PipedOutputStream();
+        try {
+            final PipedInputStream  inputFromClient2  = new PipedInputStream(outputToClient1);
+        } catch (IOException ex) {
+        }
+        // client 1 connecting to client 2
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                /*
+                * TODO: pipe DataInputStream coming from Client1 into InputFromClient1
+                *       pipe outputToClient1 into DataOutputStream( hoping it exists) out going to Client1
+                */
+            }
+        });
+        // client 2 being connected to client 1
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                /*
+                * TODO: pipe DataInputStream coming from Client2 into InputFromClient2
+                *       pipe outputToClient2 into DataOutputStream( hoping it exists) out going to Client2
+                */
+            }
+        });
     }
 }
