@@ -2,13 +2,16 @@ package Server.src.server;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 
 public class Cliente {
 
     public static void main(String[] args) {
+
         InputHandler inputHandler = new InputHandler();
         String input = "";
+        Scanner scanner = new Scanner(System.in);;
         do {
             try {
                 input = inputHandler.input();
@@ -27,3 +30,7 @@ public class Cliente {
         inputHandler.close();
     }
 }
+
+//192.168.43.27 doutra pessoa
+//192.168.1.75 computer
+//192.168.1.84 laptop
