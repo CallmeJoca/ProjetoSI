@@ -2,6 +2,8 @@
 
 
 ## Básico
+### Relatório
+https://www.overleaf.com/7267891964zcvmbpfytwzf
 ### Organização
 - [x] Lista
 - [ ] Distribuição
