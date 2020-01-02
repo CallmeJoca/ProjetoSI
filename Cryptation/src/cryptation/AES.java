@@ -10,15 +10,15 @@ public class AES {
     public static byte[] encryptTextAES(String textolimpo, SecretKey secretK) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, secretK);
-        byte[] byteCipherText = cipher.doFinal(textolimpo.getBytes());
-        return byteCipherText;
+        byte[] CipherText = cipher.doFinal(textolimpo.getBytes());
+        return CipherText;
     }
 
     public static String decryptTextAES(byte[] byteCipherText, SecretKey secretK) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretK);
-        byte[] bytePlainText = cipher.doFinal(byteCipherText);
-        return new String(bytePlainText);
+        byte[] PlainText = cipher.doFinal(byteCipherText);
+        return new String(PlainText);
     }    
     
 }
