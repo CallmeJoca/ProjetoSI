@@ -1,6 +1,7 @@
 package cryptation;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +19,8 @@ public class Client2 {
                     DataInputStream dis = new DataInputStream(s.getInputStream());
                     str = (String) dis.readUTF();
                     System.out.println("Client Says = " + str);
+                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                    dout.writeUTF("OLA");
                 }
                 catch(EOFException exc) {
                     continue;
