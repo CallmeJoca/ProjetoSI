@@ -16,25 +16,38 @@ public class Client {
 
     public static void main(String[] args) {
         
-        System.out.println("--- Entrou no Modo Cliente ---");
+        // OS CLIENTES CONECTAM-SE AO SERVIDOR ATRAVES DE UMA SOCKET C O IP DO SERVER
+        String serverIP = "192.168.0.64";
         String msg = null;
         String msgRecebida = null;
         String ip = null;
         
-        System.out.println(Client2.getIP());
         
-        // O SERVIDOR TEM DE ESTAR LIGADO PARA HAVEREM CLIENTES
-        // NO SERVIDOR, QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
+        System.out.println("--- Entrou no Modo Cliente ---");
         
-        // OS CLIENTES CONECTAM-SE AO SERVIDOR ATRAVES DE UMAA SOCKET C O IP DO SERVER
+        // REGISTO DO USER
+        Users u = new Users(getIP());
+        // ENVIO DOS DADOS DO USER PARA O SERVIDOR
+        try {
+                Socket s = new Socket(serverIP, 6666);
+                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                
+                dout.writeUTF(u.toString());
+                
+                dout.flush();
+                dout.close();
+                s.close();
+        } catch (Exception e) {
+                System.out.println("Não foi possível estabelecer a ligação.");
+        }
+        
+        
         // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
         // ESCOLHEM O IP DE UM
         // O OUTRO TEM DE RECEBER UMA NOTIFICACAO A PERGUNTAR SE QUER CONECTAR, SENAO CATCH ERROR NA SOCKET
         // SE ACEITAR, COMUNICAM DIRETAMENTE ATRAVES DE UMA SOCKET COM
         
         do {
-            Users u = new Users(ip);
-            System.out.println(u);
             msg = Read.readString();
             try {
                 Socket s = new Socket("192.168.0.181", 6666);

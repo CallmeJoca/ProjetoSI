@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 public class Main {
     
     public static void main(String[] args) {
+        
+        
         System.out.println("XIUUU: Troca de Segredos Criptográficos Seguro.");
         System.out.println("\n1 - Modo Cliente\n2 - Modo Servidor\n3 - Sair\n");
         int n = Read.readInt();
@@ -20,7 +22,7 @@ public class Main {
         
         // MUDAR PARA SERVER
         if (n==2) {
-            Client2.main(args);
+            Server.main(args);
         }
         
         if (n==3) { 

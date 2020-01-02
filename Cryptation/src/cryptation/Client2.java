@@ -17,6 +17,10 @@ public class Client2 {
     public static void main(String[] args) {
         String str = null;
         ServerSocket ss = null;
+        
+        
+        System.out.println(Client.getIP());
+        
         try {
               ss = new ServerSocket(6666);
             do{

@@ -2,6 +2,7 @@ package cryptation;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.io.FileOutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -15,6 +16,9 @@ public class Server {
     
     // TAMBÉM PODE SER AGENTE DE CONFIANÇA
     
+        // O SERVIDOR TEM DE ESTAR LIGADO PARA HAVEREM CLIENTES
+        // NO SERVIDOR, QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
+    
     public static void main(String[] args) {
         
         System.out.println("--- Entrou no Modo Servidor ---");
@@ -25,7 +29,13 @@ public class Server {
                             + " 3- Diffie-Hellman \n"
                             + " 4- Sair \n");
         
-        String str = null;
+        int protocolo = Read.readInt();
+        // REGISTA O PROTOCOLO ESCOLHIDO
+        // GUARDA INFORMAÇÃO SOBRE OS USERS CONECTADOS
+        
+        
+        
+        String userInfo = null;
         ServerSocket ss = null;
         try {
               ss = new ServerSocket(6666);
@@ -33,38 +43,21 @@ public class Server {
                 try{
                     Socket s = ss.accept();
                     DataInputStream dis = new DataInputStream(s.getInputStream());
-                    str = (String) dis.readUTF();
-                    System.out.println("Client Says = " + str);
-                }
-                catch(EOFException exc) {
-                    continue;
-                }
-                catch(Exception e){
-                    System.out.println(e);
-                    break;
-                }
-            
+                    userInfo = (String) dis.readUTF();
+                    
+                    FileOutputStream fos = new FileOutputStream("userData.txt");
+                    fos.write(userInfo.getBytes());
+                    fos.close(); 
 
-            }while(!str.equals("end"));
+                   }
+                   catch(Exception ex) {}
+                    
+            System.out.println("Client Says = " + userInfo);
+
+            }while(!userInfo.equals("end"));
             ss.close();
         }
         catch ( Exception e ) { System.out.println(e); }
-    }
-    
-    public static String getIP () {
-        String ip = null;
-        
-        try(final DatagramSocket socket = new DatagramSocket()){
-              socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-                ip = socket.getLocalAddress().getHostAddress();
-                System.out.println(ip);
-            } catch (SocketException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        return ip;
     }
 }
 
