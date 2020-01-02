@@ -4,6 +4,13 @@ package cryptation;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Client {
 
@@ -12,6 +19,9 @@ public class Client {
         System.out.println("--- Entrou no Modo Cliente ---");
         String msg = null;
         String msgRecebida = null;
+        String ip = null;
+        
+        System.out.println(Client2.getIP());
         
         // O SERVIDOR TEM DE ESTAR LIGADO PARA HAVEREM CLIENTES
         // NO SERVIDOR, QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
@@ -23,7 +33,8 @@ public class Client {
         // SE ACEITAR, COMUNICAM DIRETAMENTE ATRAVES DE UMA SOCKET COM
         
         do {
-            System.out.println("Introduza a mensagem: ");
+            Users u = new Users(ip);
+            System.out.println(u);
             msg = Read.readString();
             try {
                 Socket s = new Socket("192.168.0.181", 6666);
@@ -42,6 +53,21 @@ public class Client {
             }
         } while (!msg.equals("end"));
         
+    }
+    
+    public static String getIP () {
+        String ip = null;
         
+        try(final DatagramSocket socket = new DatagramSocket()){
+              socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                ip = socket.getLocalAddress().getHostAddress();
+                System.out.println(ip);
+            } catch (SocketException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return ip;
     }
 }
