@@ -50,6 +50,7 @@ public class RSA
         return (new BigInteger(message)).modPow(d, N).toByteArray();
     }
     
+    /*
     public static void main(String[] args) throws IOException
     {
         RSA rsa = new RSA();
@@ -80,6 +81,7 @@ public class RSA
         }
         return test;
     }
+*/
 
 }
 

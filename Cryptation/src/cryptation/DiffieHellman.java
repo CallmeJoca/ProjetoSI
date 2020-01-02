@@ -55,6 +55,7 @@ public class DiffieHellman {
     }
     
     
+    /*
     public static void main(String[] args) throws IOException, Exception {
         
         DiffieHellman DH = new DiffieHellman();
@@ -93,5 +94,6 @@ public class DiffieHellman {
         String texto_limpo = AES.decryptTextAES(criptograma,encryptKey);
         System.out.println("Criptograma: " + criptograma + "\nTexto-limpo: " + texto_limpo);
     }
+*/
 }
 

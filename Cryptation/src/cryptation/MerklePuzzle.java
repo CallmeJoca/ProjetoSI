@@ -75,6 +75,7 @@ public class MerklePuzzle {
         return null;
     }
     
+    /*
     public static void main(String[] args) throws IOException, InvalidKeySpecException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, Exception
     {   
         MerklePuzzle mkl = new MerklePuzzle();
@@ -146,4 +147,5 @@ public class MerklePuzzle {
         System.out.println("Segredo recebido!\n ------> " + decryptedMessage );
       
     }
+*/
 }
