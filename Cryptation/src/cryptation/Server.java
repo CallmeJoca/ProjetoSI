@@ -2,6 +2,7 @@ package cryptation;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +55,6 @@ public class Server {
                     FileOutputStream fos = new FileOutputStream("userData.txt", true);
                     fos.write(userInfo.getBytes());
                     fos.close();
-
                    }
                    catch(Exception ex) {}
 
@@ -64,7 +64,7 @@ public class Server {
         catch ( Exception e ) { System.out.println(e); }
     }
     
-    public static ArrayList<String> listAvailable() {
+    public static void listAvailable() {
         ArrayList<String> available = new ArrayList<>();
         int conteudo;
         String lines = null;
@@ -82,9 +82,14 @@ public class Server {
                                 lines.concat(String.valueOf(conteudo));
               }
               
+              DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+              dos.writeUTF(lines);
+              dos.flush();
+              dos.close();
+                    
         } catch(Exception ex) {}
               
-        return available;
+        //return available;
         }
         
     /*
@@ -121,7 +126,6 @@ public class Server {
         
         return available;
     }
-*/
     
     public static boolean connectTwoUsers () {
         ArrayList<String> available = listAvailable();
@@ -176,6 +180,7 @@ public class Server {
         return null;        
     }
     
+*/
     // Auxiliar para eliminar e atualizar informação sobre utilizadores no ficheiro 'userData.txt'
     public static ArrayList<String> listAllUserData() {
         ArrayList<String> userData = new ArrayList<>();

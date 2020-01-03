@@ -52,7 +52,18 @@ public class Client {
                 }
                 
                 // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
-                ArrayList<String> available_users = Server.listAvailable();
+                try {
+                        Socket s = new Socket(serverIP, 6666);
+                        DataInputStream dis = new DataInputStream(s.getInputStream());
+                        String users = (String) dis.readUTF();
+
+                        dis.close();
+                        s.close();
+                } catch (Exception e) {
+                        System.out.println("Não foi possível estabelecer a ligação.");
+                }
+                        
+                //ArrayList<String> available_users = Server.listAvailable();
 
                 /*
                 // ESCOLHEM O IP DE UM
