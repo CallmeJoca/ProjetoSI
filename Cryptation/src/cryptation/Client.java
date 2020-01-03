@@ -55,7 +55,9 @@ public class Client {
                 ArrayList<String> available_users = Server.listAvailable();
 
                 // ESCOLHEM O IP DE UM
-                System.out.println(Server.connectTwoUsers());
+                if (Server.connectTwoUsers()) {
+                    System.out.println("Conexão iniciada.");
+                }
                 
             }
             
