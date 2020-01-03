@@ -54,10 +54,12 @@ public class Client {
                 // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
                 ArrayList<String> available_users = Server.listAvailable();
 
+                /*
                 // ESCOLHEM O IP DE UM
                 if (Server.connectTwoUsers()) {
                     System.out.println("Conexão iniciada.");
                 }
+                */
                 
             }
             

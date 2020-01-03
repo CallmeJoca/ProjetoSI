@@ -3,6 +3,7 @@ package cryptation;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -52,7 +53,7 @@ public class Server {
                     
                     FileOutputStream fos = new FileOutputStream("userData.txt", true);
                     fos.write(userInfo.getBytes());
-                    fos.close(); 
+                    fos.close();
 
                    }
                    catch(Exception ex) {}
@@ -63,7 +64,30 @@ public class Server {
         catch ( Exception e ) { System.out.println(e); }
     }
     
-    
+    public static ArrayList<String> listAvailable() {
+        ArrayList<String> available = new ArrayList<>();
+        int conteudo;
+        String lines = null;
+        
+        ServerSocket ss = null;
+        try {
+              ss = new ServerSocket(6666);
+              Socket s = ss.accept();
+              
+              FileInputStream fin = new FileInputStream("userData.txt");
+              
+              while ((conteudo = fin.read()) != -1) {
+				// convert to char and display it
+				System.out.print((char) conteudo);
+                                lines.concat(String.valueOf(conteudo));
+              }
+              
+        } catch(Exception ex) {}
+              
+        return available;
+        }
+        
+    /*
     public static ArrayList<String> listAvailable() {
         ArrayList<String> available = new ArrayList<>();
         
@@ -82,7 +106,8 @@ public class Server {
                 String[] user_info = st.split(";");
                 
                 // Verifica se o utilizador lido está livre
-                if (user_info[3].equals("0")) {
+                System.out.println(user_info[3]);
+                if (user_info[3].equals("status=0")) {
 
                     // se estiver, adiciona-o a 'available'.
                     // 'available' contém os usernames dos utilizadores disponiveis.
@@ -96,6 +121,7 @@ public class Server {
         
         return available;
     }
+*/
     
     public static boolean connectTwoUsers () {
         ArrayList<String> available = listAvailable();
