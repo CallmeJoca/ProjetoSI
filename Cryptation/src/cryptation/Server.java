@@ -52,7 +52,7 @@ public class Server {
                     DataInputStream dis = new DataInputStream(s.getInputStream());
                     userInfo = (String) dis.readUTF();
                     
-                    FileOutputStream fos = new FileOutputStream("userData.txt");
+                    FileOutputStream fos = new FileOutputStream("userData.txt", true);
                     fos.write(userInfo.getBytes());
                     fos.close(); 
 
@@ -150,6 +150,31 @@ public class Server {
         }
         
         return null;        
+    }
+    
+    // Auxiliar para eliminar e atualizar informação sobre utilizadores no ficheiro 'userData.txt'
+    public static ArrayList<String> listAllUserData() {
+        ArrayList<String> userData = new ArrayList<>();
+        
+        File fin = new File("./userData.txt");
+        
+        BufferedReader br = null; 
+        try {
+            br = new BufferedReader(new FileReader(fin));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  
+        String st; 
+        try {
+            while ((st = br.readLine()) != null) { 
+                userData.add(st);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return userData;
     }
 }
 
