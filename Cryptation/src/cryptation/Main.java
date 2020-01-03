@@ -13,7 +13,7 @@ public class Main {
         int n = Read.readInt();
         
         if (n==1) {
-            Client.main(args);
+            Cliente.main(args);
         }
         
         // MUDAR PARA SERVER
