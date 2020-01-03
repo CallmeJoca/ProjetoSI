@@ -2,25 +2,19 @@ package cryptation;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Server {
+    
     
     // TAMBÉM PODE SER AGENTE DE CONFIANÇA
     
@@ -28,6 +22,10 @@ public class Server {
         // NO SERVIDOR, QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
     
     public static void main(String[] args) {
+        
+        if (!deleteAllData()) {
+            System.out.println("Servidor com erros. Reinicie.");
+        }
         
         System.out.println("--- Entrou no Modo Servidor ---");
         
@@ -175,6 +173,11 @@ public class Server {
         }
         
         return userData;
+    }
+    
+    public static boolean deleteAllData () {
+        File file = new File("./userData.txt");
+        return file.delete();
     }
 }
 
