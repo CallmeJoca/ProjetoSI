@@ -89,6 +89,7 @@ public class Server {
         
         for (int i=0; i<server.users_connected.size(); i++) {
             
+            System.out.println(server.users_connected.get(i));
             String[] user_info = available.get(i).split(";");
             
             // Verifica se o utilizador lido está livre
