@@ -18,7 +18,7 @@ public class Client {
     public static void main(String[] args) {
         
         // OS CLIENTES CONECTAM-SE AO SERVIDOR ATRAVES DE UMA SOCKET C O IP DO SERVER
-        String serverIP = "192.168.0.64";
+        String serverIP = "192.168.0.181";
         String msg = null;
         String msgRecebida = null;
         String ip = null;
@@ -30,7 +30,7 @@ public class Client {
         Users u = new Users(getIP());
         
         int ligar = 1;
-        while (ligar < 1 || ligar > 2) {
+        while (ligar >= 1 || ligar <= 2) {
             
             System.out.println("1 - Ligar a um utilizador\n2 - Esperar por ligação");
             ligar = Read.readInt();

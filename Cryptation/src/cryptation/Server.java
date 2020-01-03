@@ -102,18 +102,24 @@ public class Server {
     public static boolean connectTwoUsers () {
         ArrayList<String> available = listAvailable();
         
-        System.out.println("\nUtilizadores disponíveis agora:");
-        for (int i=0; i<available.size(); i++) {
-            
+        if (available.size() == 0) {
+            System.out.println("Não há utilizadores disponíveis de momento.");
+            return false;
         }
-        
-        System.out.println("Indique o username do utilizador a conectar: ");
-        String client2 = Read.readString();
-        if (available.contains(client2)) {
-            
-            String IPtoConnect = getIPFromUsername (client2);
-            if (IPtoConnect != null) {
-                return true;
+        else {
+            System.out.println("\nUtilizadores disponíveis agora:");
+            for (int i=0; i<available.size(); i++) {
+
+            }
+
+            System.out.println("Indique o username do utilizador a conectar: ");
+            String client2 = Read.readString();
+            if (available.contains(client2)) {
+
+                String IPtoConnect = getIPFromUsername (client2);
+                if (IPtoConnect != null) {
+                    return true;
+                }
             }
         }
         return false;
