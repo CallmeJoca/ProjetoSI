@@ -1,5 +1,6 @@
 package cryptation;
 
+
 public class Users {
     String ip;
     String password;
@@ -13,7 +14,12 @@ public class Users {
         this.username = Read.readString();
         
         System.out.println("Introduza a sua password: ");
-        this.password = Read.readString();
+        String password_plain = Read.readString();
+        try {
+            this.password = Main.calculateSHA256(password_plain);
+        } catch (Exception ex) {
+            System.out.println("Erro na leitura da password.");
+        }
     }
     
     public String getIpFromUsername (String username) {

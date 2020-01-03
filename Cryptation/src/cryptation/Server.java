@@ -65,11 +65,11 @@ public class Server {
         catch ( Exception e ) { System.out.println(e); }
     }
     
+    
     public static ArrayList<String> listAvailable() {
         ArrayList<String> available = new ArrayList<>();
         
-        URL url = Server.class.getResource("userData.txt");
-        File fin = new File(url.getPath());
+        File fin = new File("./userData.txt");
         
         BufferedReader br = null; 
         try {
@@ -81,13 +81,69 @@ public class Server {
         String st; 
         try {
             while ((st = br.readLine()) != null) { 
-                System.out.println(st);
+                String[] user_info = st.split(";");
+                
+                // Verifica se o utilizador lido está livre
+                if (user_info[3].equals("0")) {
+
+                    // se estiver, adiciona-o a 'available'.
+                    // 'available' contém os usernames dos utilizadores disponiveis.
+                    String available_username = user_info[0];
+                    available.add(available_username);
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return available;
+    }
+    
+    public static boolean connectTwoUsers () {
+        ArrayList<String> available = listAvailable();
+        
+        System.out.println("\nUtilizadores disponíveis agora:");
+        for (int i=0; i<available.size(); i++) {
+            
+        }
+        
+        System.out.println("Indique o username do utilizador a conectar: ");
+        String client2 = Read.readString();
+        if (available.contains(client2)) {
+            
+            String IPtoConnect = getIPFromUsername (client2);
+            if (IPtoConnect != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static String getIPFromUsername (String username) {
+        
+        File fin = new File("./userData.txt");
+        
+        BufferedReader br = null; 
+        try {
+            br = new BufferedReader(new FileReader(fin));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  
+        String st; 
+        try {
+            while ((st = br.readLine()) != null) { 
+                String[] user_info = st.split(";");
+                
+                if (user_info[0].equals(username)) {
+                    return user_info[1];
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;        
     }
 }
 

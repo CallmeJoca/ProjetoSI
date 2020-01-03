@@ -19,7 +19,7 @@ public class Client2 {
         ServerSocket ss = null;
         
         
-        System.out.println(Client.getIP());
+        // TEM DE RECEBER UMA NOTIFICACAO A PERGUNTAR SE QUER CONECTAR A QUEM QUER ESTABELECER LIGACAO COM ELE
         
         try {
               ss = new ServerSocket(6666);

@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,29 +28,57 @@ public class Client {
         
         // REGISTO DO USER
         Users u = new Users(getIP());
-        // ENVIO DOS DADOS DO USER PARA O SERVIDOR
-        try {
-                Socket s = new Socket(serverIP, 6666);
-                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+        
+        int ligar = 1;
+        while (ligar < 1 || ligar > 2) {
+            
+            System.out.println("1 - Ligar a um utilizador\n2 - Esperar por ligação");
+            ligar = Read.readInt();
+
+            if (ligar == 1) {
+               
+                // ENVIO DOS DADOS DO USER PARA O SERVIDOR
+                try {
+                        Socket s = new Socket(serverIP, 6666);
+                        DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                        u.status = 1; // é visto como Ocupado.
+                        dout.writeUTF(u.toString());
+
+                        dout.flush();
+                        dout.close();
+                        s.close();
+                } catch (Exception e) {
+                        System.out.println("Não foi possível estabelecer a ligação.");
+                }
                 
-                dout.writeUTF(u.toString());
+                // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
+                ArrayList<String> available_users = Server.listAvailable();
+
+                // ESCOLHEM O IP DE UM
+                System.out.println(Server.connectTwoUsers());
                 
-                dout.flush();
-                dout.close();
-                s.close();
-        } catch (Exception e) {
-                System.out.println("Não foi possível estabelecer a ligação.");
+            }
+            
+            if (ligar == 2) {
+                // ENVIO DOS DADOS DO USER PARA O SERVIDOR
+                try {
+                        Socket s = new Socket(serverIP, 6666);
+                        DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                        // u.status = 0; // é visto como livre. o statues já é definido como 0 inicialmente em 'Users'.
+                        dout.writeUTF(u.toString());
+
+                        dout.flush();
+                        dout.close();
+                        s.close();
+                } catch (Exception e) {
+                        System.out.println("Não foi possível estabelecer a ligação.");
+                }
+                
+                // passa a ser da classe Client2 (aquele que espera pela ligação).
+                Client2.main(args);
+            }
         }
-        
-        
-        // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
-                // O SERVIDOR VAI AO FICHEIRO FAZ SPLIT DAS STRING PELO ; E LISTA TODOS COM STATUS = 0.
-                
-        // ESCOLHEM O IP DE UM
-        Server.listAvailable();
-        // O OUTRO TEM DE RECEBER UMA NOTIFICACAO A PERGUNTAR SE QUER CONECTAR, SENAO CATCH ERROR NA SOCKET
-        // SE ACEITAR, COMUNICAM DIRETAMENTE ATRAVES DE UMA SOCKET COM
-        
+        /*
         do {
             msg = Read.readString();
             try {
@@ -69,6 +98,7 @@ public class Client {
             }
         } while (!msg.equals("end"));
         
+*/
     }
     
     public static String getIP () {
