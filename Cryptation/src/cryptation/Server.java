@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -67,7 +68,8 @@ public class Server {
     public static ArrayList<String> listAvailable() {
         ArrayList<String> available = new ArrayList<>();
         
-        File fin = new File("userData.txt");
+        URL url = Server.class.getResource("userData.txt");
+        File fin = new File(url.getPath());
         
         BufferedReader br = null; 
         try {
