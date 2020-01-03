@@ -1,13 +1,7 @@
 package cryptation;
 
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main {
     

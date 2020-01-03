@@ -64,7 +64,7 @@ public class Client {
                 try {
                         Socket s = new Socket(serverIP, 6666);
                         DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                        // u.status = 0; // é visto como livre. o statues já é definido como 0 inicialmente em 'Users'.
+                        // u.status = 0; // é visto como livre. o status já é definido como 0 inicialmente em 'Users'.
                         dout.writeUTF(u.toString());
 
                         dout.flush();
@@ -107,7 +107,6 @@ public class Client {
         try(final DatagramSocket socket = new DatagramSocket()){
               socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
                 ip = socket.getLocalAddress().getHostAddress();
-                System.out.println(ip);
             } catch (SocketException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownHostException ex) {

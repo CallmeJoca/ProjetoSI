@@ -53,7 +53,6 @@ public class Client2 {
         try(final DatagramSocket socket = new DatagramSocket()){
               socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
                 ip = socket.getLocalAddress().getHostAddress();
-                System.out.println(ip);
             } catch (SocketException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownHostException ex) {
