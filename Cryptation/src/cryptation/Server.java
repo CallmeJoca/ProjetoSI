@@ -38,6 +38,10 @@ public class Server {
                             + " 4- Sair \n");
         
         int protocolo = Read.readInt();
+        
+        if (protocolo == 4) {
+            System.exit(1);
+        }
         // REGISTA O PROTOCOLO ESCOLHIDO
         // GUARDA INFORMAÇÃO SOBRE OS USERS CONECTADOS
         
@@ -45,23 +49,16 @@ public class Server {
         String userInfo = null;
         ServerSocket ss = null;
         try {
-              ss = new ServerSocket(6666);
-            do{
-                try{
-                    Socket s = ss.accept();
-                    DataInputStream dis = new DataInputStream(s.getInputStream());
-                    userInfo = (String) dis.readUTF();
+            ss = new ServerSocket(6666);
+            Socket s = ss.accept();
+            DataInputStream dis = new DataInputStream(s.getInputStream());
+            userInfo = (String) dis.readUTF();
                     
-                    FileOutputStream fos = new FileOutputStream("userData.txt", true);
-                    fos.write(userInfo.getBytes());
-                    fos.close();
-                   }
-                   catch(Exception ex) {}
+            FileOutputStream fos = new FileOutputStream("userData.txt", true);
+            fos.write(userInfo.getBytes());
+            fos.close();
+        } catch(Exception ex) {}
 
-            }while(!userInfo.equals("end"));
-            ss.close();
-        }
-        catch ( Exception e ) { System.out.println(e); }
     }
     
     public static void listAvailable() {
