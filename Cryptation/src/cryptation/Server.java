@@ -17,15 +17,26 @@ import java.util.logging.Logger;
 
 public class Server {
     
+    ArrayList<String> users_connected;
     
-    // TAMBÉM PODE SER AGENTE DE CONFIANÇA
+    public Server() {
+        this.users_connected = new ArrayList<>();
+    }
+    
+    public Server getServer() {
+        return this;
+    }
+    
+        // TAMBÉM PODE SER AGENTE DE CONFIANÇA
     
         // O SERVIDOR TEM DE ESTAR LIGADO PARA HAVEREM CLIENTES
-        // NO SERVIDOR, QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
+        // QUEM ENTRAR NO MODO SERVIDOR ESCOLHE QUAL O PROTOCOLO A SER USADO
     
     public static void main(String[] args) {
         
-        ArrayList<String> users_connected = new ArrayList<>();
+        Server server = new Server();
+        
+        server.users_connected = new ArrayList<>();
     
         if (!deleteAllData()) {
             System.out.println("Servidor com erros. Reinicie.");
@@ -45,26 +56,36 @@ public class Server {
             System.exit(1);
         }
         // REGISTA O PROTOCOLO ESCOLHIDO
+        
+        
         // GUARDA INFORMAÇÃO SOBRE OS USERS CONECTADOS
-        
-        
         String userInfo = null;
         ServerSocket ss = null;
         try {
             ss = new ServerSocket(6666);
-            Socket s = ss.accept();
-            DataInputStream dis = new DataInputStream(s.getInputStream());
-            userInfo = (String) dis.readUTF();
             
-            users_connected.add(userInfo);
-        } catch(Exception ex) {}
+            do{
+                try{
+                    Socket s = ss.accept();
+                    DataInputStream dis = new DataInputStream(s.getInputStream());
+                    userInfo = (String) dis.readUTF();
+                    server.users_connected.add(userInfo);
+                   }
 
+                   catch(Exception ex) {}
+
+            }while(!userInfo.equals("end"));
+            ss.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    public static ArrayList<String> listAvailable() {
+        
+    public static ArrayList<String> listAvailable(Server server) {
         ArrayList<String> available = new ArrayList<>();
         
-        for (int i=0; i<available.size(); i++) {
+        for (int i=0; i<server.users_connected.size(); i++) {
             
             String[] user_info = available.get(i).split(";");
             
@@ -84,8 +105,8 @@ public class Server {
         return available;
     }
     
-    public static boolean connectTwoUsers () {
-        ArrayList<String> available = listAvailable();
+    public static boolean connectTwoUsers (Server server) {
+        ArrayList<String> available = listAvailable(server);
         
         if (available.size() == 0) {
             System.out.println("Não há utilizadores disponíveis de momento.");

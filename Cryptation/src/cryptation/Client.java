@@ -23,6 +23,7 @@ public class Client {
         String msgRecebida = null;
         String ip = null;
         
+        Server server = new Server();
         
         System.out.println("--- Entrou no Modo Cliente ---");
         
@@ -41,7 +42,7 @@ public class Client {
                 try {
                         Socket s = new Socket(serverIP, 6666);
                         DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                        u.status = 1; // é visto como Ocupado.
+                        u.status = 0; // é visto como Ocupado.
                         dout.writeUTF(u.toString());
 
                         dout.flush();
@@ -52,7 +53,7 @@ public class Client {
                 }
                 
                 // VEEM QUAIS SAO OS CLIENTES DISPONIVEIS
-                ArrayList<String> available_users = Server.listAvailable();
+                ArrayList<String> available_users = Server.listAvailable(server.getServer());
 
                 /*
                 // ESCOLHEM O IP DE UM
