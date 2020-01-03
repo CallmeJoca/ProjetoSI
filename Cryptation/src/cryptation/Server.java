@@ -70,6 +70,8 @@ public class Server {
                     DataInputStream dis = new DataInputStream(s.getInputStream());
                     userInfo = (String) dis.readUTF();
                     server.users_connected.add(userInfo);
+                    System.out.println("adicionado user " + userInfo);
+                    System.out.println(server.users_connected.size());
                    }
 
                    catch(Exception ex) {}
