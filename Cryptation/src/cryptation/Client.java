@@ -32,7 +32,7 @@ public class Client {
         int ligar = 1;
         while (ligar >= 1 || ligar <= 2) {
             
-            System.out.println("1 - Ligar a um utilizador\n2 - Esperar por ligação");
+            System.out.println("1 - Ligar a um utilizador\n2 - Esperar por ligação\n3 - Sair");
             ligar = Read.readInt();
 
             if (ligar == 1) {
