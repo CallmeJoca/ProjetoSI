@@ -76,6 +76,11 @@ public class Client {
                 
                 // passa a ser da classe Client2 (aquele que espera pela ligação).
                 Client2.main(args);
+                
+            }
+            
+            if (ligar == 3) {
+                break;
             }
         }
         /*
