@@ -25,6 +25,8 @@ public class Server {
     
     public static void main(String[] args) {
         
+        ArrayList<String> users_connected = new ArrayList<>();
+    
         if (!deleteAllData()) {
             System.out.println("Servidor com erros. Reinicie.");
         }
@@ -53,72 +55,30 @@ public class Server {
             Socket s = ss.accept();
             DataInputStream dis = new DataInputStream(s.getInputStream());
             userInfo = (String) dis.readUTF();
-                    
-            FileOutputStream fos = new FileOutputStream("userData.txt", true);
-            fos.write(userInfo.getBytes());
-            fos.close();
+            
+            users_connected.add(userInfo);
         } catch(Exception ex) {}
 
     }
     
-    public static void listAvailable() {
-        ArrayList<String> available = new ArrayList<>();
-        int conteudo;
-        String lines = null;
-        
-        ServerSocket ss = null;
-        try {
-              ss = new ServerSocket(6666);
-              Socket s = ss.accept();
-              
-              FileInputStream fin = new FileInputStream("userData.txt");
-              
-              while ((conteudo = fin.read()) != -1) {
-				// convert to char and display it
-				System.out.print((char) conteudo);
-                                lines.concat(String.valueOf(conteudo));
-              }
-              
-              DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-              dos.writeUTF(lines);
-              dos.flush();
-              dos.close();
-                    
-        } catch(Exception ex) {}
-              
-        //return available;
-        }
-        
-    /*
     public static ArrayList<String> listAvailable() {
         ArrayList<String> available = new ArrayList<>();
         
-        File fin = new File("./userData.txt");
-        
-        BufferedReader br = null; 
-        try {
-            br = new BufferedReader(new FileReader(fin));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-  
-        String st; 
-        try {
-            while ((st = br.readLine()) != null) { 
-                String[] user_info = st.split(";");
-                
-                // Verifica se o utilizador lido está livre
-                System.out.println(user_info[3]);
-                if (user_info[3].equals("status=0")) {
+        for (int i=0; i<available.size(); i++) {
+            
+            String[] user_info = available.get(i).split(";");
+            
+            // Verifica se o utilizador lido está livre
+            System.out.println(user_info[3]);
+            
+            if (user_info[3].contains("status=0")) {
 
-                    // se estiver, adiciona-o a 'available'.
-                    // 'available' contém os usernames dos utilizadores disponiveis.
-                    String available_username = user_info[0];
-                    available.add(available_username);
-                }
+                // se estiver, adiciona-o a 'available'.
+                // 'available' contém os usernames dos utilizadores disponiveis.
+                String available_username = user_info[0];
+                available.add(available_username);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                
         }
         
         return available;
@@ -177,7 +137,6 @@ public class Server {
         return null;        
     }
     
-*/
     // Auxiliar para eliminar e atualizar informação sobre utilizadores no ficheiro 'userData.txt'
     public static ArrayList<String> listAllUserData() {
         ArrayList<String> userData = new ArrayList<>();
