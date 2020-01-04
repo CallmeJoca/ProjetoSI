@@ -1,21 +1,14 @@
 package server;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.security.Key;
-import java.util.Base64;
 import java.util.Random;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public class DiffieHellman {
     
     private int bitlength = 1024;
     private Random r;
-    private BigInteger p; 
+    BigInteger p; 
     
     public DiffieHellman() {
         r = new Random();
