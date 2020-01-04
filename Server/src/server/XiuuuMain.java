@@ -1,9 +1,12 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package server;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import static server.DiffieHellman.calculateXY;
+import static server.DiffieHellman.generateKey;
+import static server.DiffieHellman.getRandomBigInteger;
 
 /**
  *
@@ -20,7 +23,6 @@ public class XiuuuMain {
         boolean newclient = true;
         int serverDoor = -1, clientDoor = -1;
         String username = "", serverIP = "";
-        
         
         // Começar por pedir em que modo a aplicação vai correr
         int choice = -1;
@@ -93,20 +95,100 @@ public class XiuuuMain {
                                     switch(clientChoice2) {
                                         case 1: // Diffie Hellman
                                             // Encadeamento para fazer DiffieHellman
+                                            // Gera número primo
+                                            DiffieHellman DH = new DiffieHellman();
+                                            BigInteger P = DH.p;
+                                            // Gera g entre 1 e P
+                                            BigInteger g = getRandomBigInteger(P);
+                                            // Cliente gera x
+                                            BigInteger x = getRandomBigInteger(P);
+                                            
+                                            // Cliente gera X
+                                            BigInteger X = calculateXY(g,P,x);
+                                            
+                                            // Enviar X ao outro cliente
+                                            // --------------------------
+                                            
+                                            // Recebe Y do outro cliente
+                                            // -------------------------
+                                            // BigInteger Y = ------------------
+                                            
+                                            // Calcular K
+                                            //BigInteger KeyCliente = calculateSharedKey(x,P,Y);
+
+                                            // Criar chave a partir de K
+                                            //byte[] eKey = generateKey(KeyCliente.toByteArray());
+                                            //SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
+                                            //byte[] dKey =  generateKey(KeyCliente.toByteArray());
+                                            //SecretKey decryptKey = new SecretKeySpec(dKey, 0, dKey.length, "AES");
+                                            
+                                            
                                             // Queremos trocar uma chave secreta
                                             System.out.println("O que queres sussurrar?");
                                             break;
                                             
                                         case 2: // Puzzles de Merkle
                                             // Encadeamento para fazer os Puzzles de Merkle
+                                            
+                                            MerklePuzzle mkl = new MerklePuzzle();
+                                            int totalPuzzles = 2000;
+                                            int key_Length = 4;
+
+                                            ArrayList<String> puzzles = new ArrayList<>();
+                                            ArrayList<String> puzzlesA = new ArrayList<>();
+                                            ArrayList<String> keys = new ArrayList<String>();
+
+
+                                            //Gera puzzles 
+                                            for (int i = 0; i < totalPuzzles; ++i) {
+                                                String puzzleKeys = mkl.getRandomString(16);
+                                                keys.add(i, puzzleKeys);
+                                                puzzlesA.add("Key=" + puzzleKeys + " & Puzzle=" + i);
+                                                String ciphertext = mkl.encryptMerkle(mkl.getRandomKey(key_Length), "Key=" + puzzleKeys + " & Puzzle=" + i);
+                                                //System.out.println("Puzzle " + i + " chave = " + puzzleKeys);
+                                                puzzles.add(ciphertext);
+                                            } 
+                                            
+                                            // Cliente encia puzzles
+                                            
+                                            // Outro cliente devolve puzzle escolhido --- 
+        
+        
+                                            // Cliente obtem puzzle
+                                            // String puzzle_chosen = puzzlesA.get(Integer.parseInt( --- puzzle recebido --- ));
+                                            // String keyCliente = puzzle_chosen.substring(4, 20); //chave
+
+
+                                            // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
+                                            // byte[] encodedKey = Base64.getDecoder().decode(key);
+                                            // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+            
+            
                                             // Queremos trocar uma chave secreta
                                             System.out.println("O que queres sussurrar?");
+                                            
+                                            // Encriptar mensagem
+                                            // byte[] encryptedMessage = encryptTextAES(mensagem, originalKey);
+                                            
+                                            // Enviar mensagem ao outro cliente
+                                            // ---------------------------
+                                            
+                                            
                                             break;
                                             
                                         case 3: //RSA
                                             //Encadeamento para fazer RSA
+                                            RSA rsa = new RSA();
+                                            
                                             // Queremos trocar uma chave secreta
                                             System.out.println("O que queres sussurrar?");
+                                            
+                                            // Encryptar segredo
+                                            //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());
+        
+                                            // Enviar segredo
+                                            // ----------------
+                                            
                                             break;
                                             
                                         case 4: // Servidor fornecer chaves
