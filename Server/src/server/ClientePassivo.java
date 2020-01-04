@@ -23,12 +23,10 @@ public class ClientePassivo extends Cliente implements Runnable {
     private Socket BobSS;
     
     
-    public ClientePassivo() {
-        super();
-    }
+    public ClientePassivo() {}
     
-    public ClientePassivo(String BobIpAddress) {
-        super();
+    public ClientePassivo(Cliente cliente, String BobIpAddress) {
+        super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
         this.BobIpAddress = BobIpAddress;
     }
     
