@@ -21,7 +21,7 @@ public class Main {
             Server.main(args);
         }
         
-        if (n==3) { 
+        if (n==3) {
             System.exit(0);
         }
     }
@@ -34,8 +34,8 @@ public class Main {
         for (int i = 0; i < encodedhash.length; i++) {
             String hex = Integer.toHexString(0xff & encodedhash[i]);
             if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
+            hexString.append(hex);
         }
         return hexString.toString();
-    } 
+    }
 }

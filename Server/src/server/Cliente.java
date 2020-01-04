@@ -1,11 +1,12 @@
 package server;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 
 public class Cliente {
-
+    
     public static void main(String[] args) {
         
         try {
@@ -15,7 +16,7 @@ public class Cliente {
             dout.flush();
             dout.close();
             s.close();
-        } catch(Exception e) {
+        } catch(IOException e) {
             System.out.println(e);
         }
     }
