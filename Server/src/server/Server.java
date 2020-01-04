@@ -8,7 +8,15 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server{
+public class Server implements Runnable{
+    
+    static void main(String[] args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    ServerSocket sSocket;
+    Thread t;
+    ArrayList[] clients;
     
     Socket clientInput;
 

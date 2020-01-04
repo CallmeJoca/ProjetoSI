@@ -2,23 +2,19 @@ package server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 
 public class Cliente {
-
-    static void main(String[] args) {
-        //TODO: Code main in client for when called from Main.java
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
+    
     // Atributos básicos
     private String username;
     private String serverIP;
     private int serverDoor;
     private int clientDoor; // pode ser mudado para estático?
     private Socket serverSocket;
-
+    
     //  Construtores
     public Cliente() {}
     
@@ -28,37 +24,37 @@ public class Cliente {
         this.serverDoor = serverDoor;
         this.clientDoor = clientDoor;
     }
-
+    
     
     //  Getters e Setters
     public String getUsername() {
         return username;
     }
-
+    
     public void setUsername(String username) {
         this.username = username;
     }
-
+    
     public String getServerIP() {
         return serverIP;
     }
-
+    
     public void setServerIP(String serverIP) {
         this.serverIP = serverIP;
     }
-
+    
     public int getServerDoor() {
         return serverDoor;
     }
-
+    
     public void setServerDoor(int serverDoor) {
         this.serverDoor = serverDoor;
     }
-
+    
     public int getClientDoor() {
         return clientDoor;
     }
-
+    
     public void setClientDoor(int clientDoor) {
         this.clientDoor = clientDoor;
     }
@@ -85,6 +81,25 @@ public class Cliente {
             System.out.println(e);
             return false;
         }
+    }
+    
+    public String receiveClientIP() {
+        try {
+            ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
+            return in.readUTF();
+        }catch(Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+    
+    public String requestClientIP(String nome) {
+        try {
+            return null;
+        }catch(Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
     
     // Eventualmente tentar trocar de atributos?

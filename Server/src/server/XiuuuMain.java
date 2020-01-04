@@ -1,6 +1,8 @@
 package server;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -83,6 +85,8 @@ public class XiuuuMain {
                                 System.out.println("\nPara quem queres sussurrar?");
                                 String whisperTo = Read.readString();
                                 
+                                String aliceIP = currClient.receiveClientIP();
+                                ClientePassivo passiveClient = new ClientePassivo(currClient, aliceIP);
                                 /*if(listaUsers.contains(whisperTo)) {
                                 // Invocar método boolean capaz de estabelecer comunicação de 2 clientes
                                 //if(activeClient.tryClient(whisperTo, porta
@@ -118,7 +122,7 @@ public class XiuuuMain {
                                             
                                             // Calcular K
                                             //BigInteger KeyCliente = calculateSharedKey(x,P,Y);
-
+                                            
                                             // Criar chave a partir de K
                                             //byte[] eKey = generateKey(KeyCliente.toByteArray());
                                             //SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
@@ -136,13 +140,13 @@ public class XiuuuMain {
                                             MerklePuzzle mkl = new MerklePuzzle();
                                             int totalPuzzles = 2000;
                                             int key_Length = 4;
-
+                                            
                                             ArrayList<String> puzzles = new ArrayList<>();
                                             ArrayList<String> puzzlesA = new ArrayList<>();
                                             ArrayList<String> keys = new ArrayList<String>();
-
-
-                                            //Gera puzzles 
+                                            
+                                            
+                                            //Gera puzzles
                                             for (int i = 0; i < totalPuzzles; ++i) {
                                                 String puzzleKeys = mkl.getRandomString(16);
                                                 keys.add(i, puzzleKeys);
@@ -150,23 +154,23 @@ public class XiuuuMain {
                                                 String ciphertext = mkl.encryptMerkle(mkl.getRandomKey(key_Length), "Key=" + puzzleKeys + " & Puzzle=" + i);
                                                 //System.out.println("Puzzle " + i + " chave = " + puzzleKeys);
                                                 puzzles.add(ciphertext);
-                                            } 
+                                            }
                                             
                                             // Cliente encia puzzles
                                             
-                                            // Outro cliente devolve puzzle escolhido --- 
-        
-        
+                                            // Outro cliente devolve puzzle escolhido ---
+                                            
+                                            
                                             // Cliente obtem puzzle
                                             // String puzzle_chosen = puzzlesA.get(Integer.parseInt( --- puzzle recebido --- ));
                                             // String keyCliente = puzzle_chosen.substring(4, 20); //chave
-
-
+                                            
+                                            
                                             // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
                                             // byte[] encodedKey = Base64.getDecoder().decode(key);
                                             // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
-            
-            
+                                            
+                                            
                                             // Queremos trocar uma chave secreta
                                             System.out.println("O que queres sussurrar?");
                                             
@@ -188,7 +192,7 @@ public class XiuuuMain {
                                             
                                             // Encryptar segredo
                                             //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());
-        
+                                            
                                             // Enviar segredo
                                             // ----------------
                                             
@@ -213,7 +217,6 @@ public class XiuuuMain {
                                 
                                 break;
                             case 2: // Cliente Passivo
-                                
                                 // Correr numa thread nova?
                                 // Espera de sinalização para começar comunicação
                                 // ClientePassivo passiveClient = new ClientePassivo(currClient);
@@ -305,8 +308,20 @@ public class XiuuuMain {
         return choice;
     }
     
+    public static String calculateSHA256(String password) throws Exception {
+        MessageDigest hash = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = hash.digest(password.getBytes(StandardCharsets.UTF_8));
+        
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < encodedhash.length; i++) {
+            String hex = Integer.toHexString(0xff & encodedhash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     
-    
-    
-}// Fim da classe
+    public static void listPendingUsers()
+            
+            }// Fim da classe
 
