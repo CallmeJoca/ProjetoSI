@@ -59,14 +59,19 @@ public class ClienteAtivo extends Cliente {
         // TODO: Fazer os 5 algoritmos
         
         switch(alg) {
+            
             case 1:
                 break;
+                
             case 2:
                 break;
+                
             case 3:
                 break;
+                
             case 4:
                 break;
+                
             case 5:
                 break;
         }

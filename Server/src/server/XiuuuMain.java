@@ -21,7 +21,10 @@ public class XiuuuMain {
     public static void main(String[] args) throws Exception {
         
         boolean newclient = true;
-        int serverDoor = -1, clientDoor = -1;
+        int serverDoor = -1;
+        int clientDoor = 443; // A porta do TCP costuma estar sempre aberta
+        boolean connectedToServer, connectedToClient;
+        
         String username = "", serverIP = "";
         
         // Começar por pedir em que modo a aplicação vai correr
@@ -52,12 +55,9 @@ public class XiuuuMain {
                             System.out.println("Qual a porta do servidor a que te queres conectar?");
                             serverDoor = Read.readInt();
                             
-                            System.out.println("Qual, das tuas portas, vais querer abrir para comunicação?");
-                            clientDoor = Read.readInt();
-                            
-                            System.out.println("Nome : " + username + "\n" + "Conectar no servidor cujo IP : " + serverIP);
-                            System.out.println("Porta do Servidor : " + serverDoor + "\n" + "Porta do Cliente : " + clientDoor);
+                            System.out.println("Nome : " + username + "\nConectar no servidor cujo IP : " + serverIP + "\nPorta do Servidor : " + serverDoor + "\n");
                             System.out.println("\nQueres revalidar os teus dados?\n 0 - Prosseguir\n1 - Reintroduzir dados\n");
+                            
                             enlistcheck = Read.readInt();
                             
                         }while(enlistcheck < 0 || enlistcheck > 1); // sair do enlist
@@ -65,8 +65,11 @@ public class XiuuuMain {
                     }
                     // Eventualmente chamar o construtor do cliente normal com os 4 argumentos anterioes
                     // e tentar estabelecer comunicação com o servidor
-                    // Cliente currClient = new Cliente(username, serverIP, serverDoor, clientDoor);
-                    
+                    Cliente currClient = new Cliente(username, serverIP, serverDoor, clientDoor);
+                    if(currClient.establishServerConnection()) {
+                        connectedToClient = true;
+                        // por tudo o que está em baixo
+                    }
                     // Talvez declarar Clientes logo debaixo da main?
                     
                     int clientChoice1;
@@ -75,7 +78,7 @@ public class XiuuuMain {
                         switch(clientChoice1) { //Entrar em que modo de cliente ativo ou passivo, ou fazer pbkdf2
                             
                             case 1: // Cliente Ativo
-                                // ClienteAtivo activeClient = new ClienteAtivo(currCliente);
+                                // Client.askUserList();
                                 // Comunicar com o servidor que queres uma lista de users à espera de ser sussurrados
                                 System.out.println("\nPara quem queres sussurrar?");
                                 String whisperTo = Read.readString();
