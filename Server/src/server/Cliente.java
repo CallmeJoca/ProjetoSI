@@ -3,7 +3,9 @@ package server;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 public class Cliente {
@@ -73,6 +75,18 @@ public class Cliente {
         }
     }
     
+    @Override
+    public Object clone() {
+        Cliente cliente = new Cliente();
+        cliente.username = this.username;
+        cliente.serverDoor = this.serverDoor;
+        cliente.clientDoor = this.clientDoor;
+        cliente.serverDoor = this.serverDoor;
+        cliente.serverSocket = this.serverSocket;
+        
+        return cliente;
+    }
+    
     public boolean closeServerConnection() {
         try {
             serverSocket.close();
@@ -93,14 +107,24 @@ public class Cliente {
         }
     }
     
-    public String requestClientIP(String nome) {
+    public String requestUsers() {
         try {
-            return null;
+            ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
+            ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
+            //enviar 1 para listar users
+            toServer.write(1);
+            ArrayList[] users = (ArrayList[])fromServer.readObject();
+            
+            
         }catch(Exception e) {
             System.out.println(e);
         }
         return null;
+        // Eventualmente tentar trocar de atributos?
     }
     
-    // Eventualmente tentar trocar de atributos?
+    public void printhelp(ArrayList[] list) {
+        
+        
+    }
 }

@@ -23,8 +23,10 @@ public class ClienteAtivo extends Cliente {
     
     
     
+    public ClienteAtivo() {}
+    
     public ClienteAtivo(Cliente cliente, String AliceIpAddress) {
-        super();
+        super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
         this.AliceIpAddress = AliceIpAddress;
     }
     

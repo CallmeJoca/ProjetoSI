@@ -1,5 +1,6 @@
 package server;
 
+import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -80,13 +81,13 @@ public class XiuuuMain {
                         switch(clientChoice1) { //Entrar em que modo de cliente ativo ou passivo, ou fazer pbkdf2
                             
                             case 1: // Cliente Ativo
-                                // Client.askUserList();
+                                
+                                
+                                // Client.askUserList();  ENVIAR 1 PARA O SERVIDOR
                                 // Comunicar com o servidor que queres uma lista de users à espera de ser sussurrados
                                 System.out.println("\nPara quem queres sussurrar?");
                                 String whisperTo = Read.readString();
                                 
-                                String aliceIP = currClient.receiveClientIP();
-                                ClientePassivo passiveClient = new ClientePassivo(currClient, aliceIP);
                                 /*if(listaUsers.contains(whisperTo)) {
                                 // Invocar método boolean capaz de estabelecer comunicação de 2 clientes
                                 //if(activeClient.tryClient(whisperTo, porta
@@ -321,7 +322,9 @@ public class XiuuuMain {
         return hexString.toString();
     }
     
-    public static void listPendingUsers()
-            
-            }// Fim da classe
+    public static void listPendingUsers() {
+    
+    }
+    
+}// Fim da classe
 

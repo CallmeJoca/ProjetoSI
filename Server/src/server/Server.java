@@ -36,12 +36,12 @@ public class Server implements Runnable{
     }
     @Override
     public void run() {
-        while(true) {
-            try {
-                int option;
-                Socket clientInput = sSocket.accept();
+        
+        int option;
+        try {
+            Socket clientInput = sSocket.accept();
+            while(true) {
                 option = printMenu(clientInput);
-                
                 switch (option) {
                     case 1:
                         
@@ -55,11 +55,9 @@ public class Server implements Runnable{
                     default:
                         break;
                 }
-            } //To change body of generated methods, choose Tools | Templates.
-            catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 }
