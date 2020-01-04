@@ -7,6 +7,7 @@ package server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javax.crypto.SecretKey;
@@ -22,7 +23,11 @@ public class ClientePassivo extends Cliente implements Runnable {
     private Socket BobSS;
     
     
-    public ClientePassivo(Cliente cliente, String BobIpAddress) {
+    public ClientePassivo() {
+        super();
+    }
+    
+    public ClientePassivo(String BobIpAddress) {
         super();
         this.BobIpAddress = BobIpAddress;
     }
