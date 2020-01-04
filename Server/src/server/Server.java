@@ -10,17 +10,30 @@ import java.util.logging.Logger;
 
 public class Server implements Runnable{
     
-    static void main(String[] args) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     ServerSocket sSocket;
-    Thread t;
     ArrayList[] clients;
-    
     Socket clientInput;
 
-    static void main() {
+    /**
+     *
+     * @param clientInput
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static int printMenu(Socket clientInput) throws IOException, ClassNotFoundException{
+        ObjectInputStream inputText = new ObjectInputStream(clientInput.getInputStream());
+        
+        System.out.println("Menu:");
+        System.out.println("1. Escolher porta a abrir");
+        System.out.println("2. Fazer print dos clientes");
+        System.out.println("3. Desligar");
+        
+        return ((int) inputText.readObject());
+    }
+
+    @Override
+    public void run() {
         while(true) {
             try {
                 int option;
@@ -45,26 +58,5 @@ public class Server implements Runnable{
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-
-    ServerSocket sSocket;
-    ArrayList[] clients;
-
-    /**
-     *
-     * @param clientInput
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public static int printMenu(Socket clientInput) throws IOException, ClassNotFoundException{
-        ObjectInputStream inputText = new ObjectInputStream(clientInput.getInputStream());
-        
-        System.out.println("Menu:");
-        System.out.println("1. Escolher porta a abrir");
-        System.out.println("2. Fazer print dos clientes");
-        System.out.println("3. Desligar");
-        
-        return ((int) inputText.readObject());
     }
 }
