@@ -2,8 +2,8 @@ package server;
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
-import static cryptation.AES.decryptTextAES;
-import static cryptation.AES.encryptTextAES;
+//import static cryptation.AES.decryptTextAES;
+//import static cryptation.AES.encryptTextAES;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
