@@ -21,7 +21,6 @@ public class XiuuuMain {
         int serverDoor = -1, clientDoor = -1;
         String username = "", serverIP = "";
         
-        
         // Começar por pedir em que modo a aplicação vai correr
         int choice = -1;
         do {
