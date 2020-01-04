@@ -8,7 +8,17 @@ import java.net.Socket;
 public class Server {
     
     
-    
+    public int printMenu(){
+        int option = -1;
+        
+        System.out.println("Menu:");
+        System.out.println("1. Escolher porta a abrir");
+        System.out.println("2. Fazer print dos clientes");
+        System.out.println("3. Desligar");
+        
+        
+        return option;
+    }
     
     public static void main(String[] args) {
         
