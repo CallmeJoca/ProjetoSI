@@ -7,6 +7,11 @@ import java.net.Socket;
 
 public class Cliente {
 
+    static void main(String[] args) {
+        //TODO: Code main in client for when called from Main.java
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
     // Atributos básicos
     private String username;
     private String serverIP;
