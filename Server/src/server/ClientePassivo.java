@@ -252,7 +252,7 @@ public class ClientePassivo extends Cliente implements Runnable {
         return null;
     }
      
-    public sendSecretKeyGetPublicKey(BigInteger N, BigInteger e, BigInteger phi) {
+    public void sendSecretKeyGetPublicKey(BigInteger N, BigInteger e, BigInteger phi) {
         
     }
     

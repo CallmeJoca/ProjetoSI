@@ -105,7 +105,9 @@ public class ClienteAtivo extends Cliente {
         return null;
     }
     
-    public 
+    public void sendPublicKeyGetSecretKey() {
+    
+    }
     
     public byte[] sendSecret_getSecretBYTE(byte[] criptograma) {
         try {

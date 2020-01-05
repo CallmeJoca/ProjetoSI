@@ -185,7 +185,9 @@ public class XiuuuMain {
                                                 case 3: //RSA
                                                     //Encadeamento para fazer RSA
                                                     RSA rsa = new RSA();
-                                                    
+                                                    BigInteger N = rsa.N;
+                                                    BigInteger e = rsa.e;
+                                                    BigInteger phi = rsa.phi;
                                                     // Enviar N, e, phi
                                                     // -------------------
                                                     // -------------------
