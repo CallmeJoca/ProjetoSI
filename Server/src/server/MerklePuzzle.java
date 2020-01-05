@@ -117,7 +117,7 @@ public class MerklePuzzle {
         // BOB envia puzzle --- teststring
         
         
-        // ALice obtem puzzle
+        // Alice obtem puzzle
         String puzzle_chosen = puzzlesA.get(Integer.parseInt(teststring));
         String keyA = puzzle_chosen.substring(4, 20); //chave
         System.out.println("Key Alice: " + keyA);

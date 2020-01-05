@@ -7,9 +7,9 @@ public class RSA
 {
     private final BigInteger p;
     private BigInteger q;
-    private BigInteger N;
+    BigInteger N;
     private BigInteger phi;
-    private BigInteger e;
+    BigInteger e;
     private BigInteger d;
     private int bitlength = 1024;
     private Random r;
@@ -22,7 +22,6 @@ public class RSA
         
         N = p.multiply(q);
         
-        
         phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
         
         e = BigInteger.probablePrime(bitlength / 2, r);
@@ -32,18 +31,17 @@ public class RSA
             e.add(BigInteger.ONE);
         }
         
-        
         d = e.modInverse(phi);
     }
      
     // Encrypt message
-    public byte[] encryptRSA(byte[] message)
+    public byte[] encryptRSA(byte[] message, BigInteger N, BigInteger e)
     {
         return (new BigInteger(message)).modPow(e, N).toByteArray();
     }
  
     // Decrypt message
-    public byte[] decryptRSA(byte[] message)
+    public byte[] decryptRSA(byte[] message, BigInteger N, BigInteger d)
     {
         return (new BigInteger(message)).modPow(d, N).toByteArray();
     }

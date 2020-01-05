@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import static server.AES.decryptTextAES;
 import static server.AES.encryptTextAES;
 import static server.DiffieHellman.calculateSharedKey;
 import static server.DiffieHellman.calculateXY;
@@ -129,8 +130,9 @@ public class XiuuuMain {
                                                     //Mandar o segredo e receber um segredo
                                                     byte[] criptograma = activeClient.sendSecret_getSecret(segredo);
                                                     
-                                                    //String plaintext = decryptCypherAES ???
-                                                    //System.out.println(plaintext);
+                                                    // Decrypt segredo
+                                                    String plaintext = decryptTextAES(criptograma, decryptKey);
+                                                    System.out.println(plaintext);
                                                     
                                                     
                                                     break;
@@ -153,20 +155,17 @@ public class XiuuuMain {
                                                         keys.add(i, puzzleKeys);
                                                         puzzlesA.add("Key=" + puzzleKeys + " & Puzzle=" + i);
                                                         String ciphertext = mkl.encryptMerkle(mkl.getRandomKey(key_Length), "Key=" + puzzleKeys + " & Puzzle=" + i);
-                                                        //System.out.println("Puzzle " + i + " chave = " + puzzleKeys);
                                                         puzzles.add(ciphertext);
                                                     }
                                                     
                                                     // Cliente envia puzzles
-                                                    
-                                                    // Outro cliente devolve puzzle escolhido ---
-                                                    
-                                                    
+                                                    // Outro cliente devolve puzzle escolhido
                                                     // Cliente obtem puzzle
-                                                    // String puzzle_chosen = puzzlesA.get(Integer.parseInt( --- puzzle recebido --- ));
+                                                    // String puzzle_recebido = activeClient.sendPuzzleGetPuzzle(); 
+                                                    // String puzzle_chosen = puzzlesA.get(Integer.parseInt(puzzle_recebido));
+                                                    
+                                                    // Obtem chave
                                                     // String keyCliente = puzzle_chosen.substring(4, 20); //chave
-                                                    
-                                                    
                                                     // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
                                                     // byte[] encodedKey = Base64.getDecoder().decode(key);
                                                     // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
@@ -174,7 +173,7 @@ public class XiuuuMain {
                                                     
                                                     // Queremos trocar uma chave secreta
                                                     System.out.println("O que queres sussurrar?");
-                                                    
+                                                    String mensagem2 = Read.readString();
                                                     // Encriptar mensagem
                                                     // byte[] encryptedMessage = encryptTextAES(mensagem, originalKey);
                                                     
@@ -188,8 +187,14 @@ public class XiuuuMain {
                                                     //Encadeamento para fazer RSA
                                                     RSA rsa = new RSA();
                                                     
+                                                    // Enviar N, e, phi
+                                                    // -------------------
+                                                    // -------------------
+                                                    // ------------------- 
+                                                    
                                                     // Queremos trocar uma chave secreta
                                                     System.out.println("O que queres sussurrar?");
+                                                    String mensagem3 = Read.readString();
                                                     
                                                     // Encryptar segredo
                                                     //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());

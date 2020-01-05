@@ -1,33 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import static server.AES.encryptTextAES;
+import static server.AES.decryptTextAES;
 import static server.DiffieHellman.calculateSharedKey;
 import static server.DiffieHellman.calculateXY;
 import static server.DiffieHellman.generateKey;
 import static server.DiffieHellman.getRandomBigInteger;
 
-/**
- *
- * @author a40284
- */
+
 public class ClientePassivo extends Cliente implements Runnable {
     
     //Vão ser precisos mais alguns atributos
@@ -112,30 +107,71 @@ public class ClientePassivo extends Cliente implements Runnable {
                 BigInteger Y = calculateXY(g,P,y);
                 
                 // Enviar X e receber Y
-                
                 BigInteger X = this.sendYgetX(Y);
                 BigInteger KeyCliente = calculateSharedKey(y,P,X);
 
+                
+                // Chaves 
                 byte[] eKey = generateKey(KeyCliente.toByteArray());
                 SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
                 byte[] dKey =  generateKey(KeyCliente.toByteArray());
                 SecretKey decryptKey = new SecretKeySpec(dKey, 0, dKey.length, "AES");
                 
+                // Mensagem a enviar (-- encriptada --)
                 System.out.println("O que queres sussurrar?");
                 String mensagem = Read.readString();
                 byte[] segredo = encryptTextAES(mensagem, encryptKey);
                 
-                //Mandar o segredo e receber um segredo
-                byte[] criptograma = this.sendSecret_getSecret(segredo);
+                // Mandar o segredo
+                // Receber um segredo
+                byte[] criptograma_recebido = this.sendSecret_getSecret(segredo);
                 
-                //String plaintext = decryptCypherAES ???
-                //System.out.println(plaintext);
+                // Decrypt segredo
+                String plaintext = decryptTextAES(criptograma_recebido, decryptKey);
+                System.out.println(plaintext);
                 
                 break;
-            case 2:
+            case 2: // Puzzles de Merkle
+                
+                // Receber Puzzles da Alice
+                
+                // Receber chave
+                // String key = sendPuzzleGetKey();
+                
+                // Chave 
+                // String keyAB = Base64.getEncoder().encodeToString(key.getBytes());
+                // byte[] encodedKey = Base64.getDecoder().decode(keyAB);
+                // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+                
+                // Receber segredo
+                // ---------------------
+                
+                // Decrypt segredo
+                // String decryptedMessage = decryptTextAES(encryptedMessage, originalKey);
+                // System.out.println("Segredo recebido!\n ------> " + decryptedMessage );
+                
+                // Enviar segredo ???
+                // --------------
                 
                 break;
-            case 3:
+            case 3: // RSA
+                
+                // Receber N, e, phi
+                // BigInteger N = 
+                // BigInteger e = 
+                // BigInteger phi =
+                
+                // Calcular d
+                // BigInteger d = e.modInverse(phi);
+                
+                // Receber segredo
+                // byte[] segredo = ????
+                
+                // Decrypt segredo
+                // byte[] decrypted = rsa.decryptRSA(segredo, N, d);
+                
+                // Enviar segredo ???
+                // --------------------
                 
                 break;
             case 4:
@@ -156,10 +192,10 @@ public class ClientePassivo extends Cliente implements Runnable {
             
             //receber o X da Alice;
             BigInteger X = (BigInteger)fromAlice.readObject();
+            
             //enviar à alice o Y
             toAlice.writeObject(Y);
 
-            
             toAlice.close();
             fromAlice.close();
             return X;
@@ -173,19 +209,37 @@ public class ClientePassivo extends Cliente implements Runnable {
         }
     }
     
-    public String sendPuzzleGetKey() {
+    public String sendPuzzleGetKey() throws InvalidKeySpecException {
+        int totalPuzzles = 2000;
+        int key_Length = 4;
         try {
             ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
             ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
+            MerklePuzzle mkl = new MerklePuzzle();
             
-            //Obter todos os puzzles
-            ArrayList<String> puzzles = (ArrayList<String>)fromAlice.readObject();
-            
-            for(String puzzle: puzzles) {
-                
+            // Obter todos os puzzles
+            ArrayList<String> puzzles = (ArrayList<String>)fromAlice.readObject();           
+           
+            // O Bob escolhe um puzzle ao acaso e resolve-o.
+            Random randomGenerator = new Random();
+            int randomPuzzle = randomGenerator.nextInt(totalPuzzles);
+            String key_guessing = "";
+            boolean solved = false;
+            while (!solved) {
+                key_guessing = mkl.decryptMerkle(mkl.getRandomKey(key_Length), puzzles.get(randomPuzzle).toString());
+
+                if (key_guessing != null && key_guessing.substring(0, 4).equals("Key=")) {
+                    solved = true;
+                }
             }
-            //Como é que se resolvem os puzzles?
             
+            // Bob obtem chave
+            String keyB = key_guessing.substring(4, 20); //chave
+            
+            // Bob envia puzzle à Alice
+            toAlice.writeObject(randomPuzzle);
+            
+            return keyB;
             
         }catch(IOException e) {
             System.out.println(e);
@@ -195,8 +249,7 @@ public class ClientePassivo extends Cliente implements Runnable {
         
         return null;
     }
-    
-        
+     
     
     public byte[] sendSecret_getSecret(byte[] criptograma) {
         try {
@@ -223,4 +276,5 @@ public class ClientePassivo extends Cliente implements Runnable {
         }
         return null;
     }
+
 }

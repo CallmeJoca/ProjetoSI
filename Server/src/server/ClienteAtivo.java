@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package server;
 
 import java.io.ByteArrayOutputStream;
@@ -17,17 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 
-/**
- *
- * @author a40284
- */
+
 public class ClienteAtivo extends Cliente {
     
     //Vão ser precisos mais alguns atributos
     private String BobIpAddress;
     private Socket BobSS;
-    
-    
     
     public ClienteAtivo() {}
     
@@ -129,6 +119,5 @@ public class ClienteAtivo extends Cliente {
         }
         return null;
     }
-    
-    
+       
 }
