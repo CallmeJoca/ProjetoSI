@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -15,6 +16,7 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -83,19 +85,19 @@ public class ClientePassivo extends Cliente implements Runnable {
             // Server check
             boolean serverCheck = fromServer.readBoolean();
             toServer.close();
-            fromServer.close();            
+            fromServer.close();
             return serverCheck;
-
+            
         }catch(IOException e) {
             System.out.println(e);
             return false;
-        }   
+        }
     }
     
-
+    
     @Override
     public void run() {
-        // 
+        //
         //escolherTrocaSegredo()
     }
     
@@ -114,9 +116,9 @@ public class ClientePassivo extends Cliente implements Runnable {
                 // Enviar X e receber Y
                 BigInteger X = this.sendYgetX(Y);
                 BigInteger KeyCliente = calculateSharedKey(y,P,X);
-
                 
-                // Chaves 
+                
+                // Chaves
                 byte[] eKey = generateKey(KeyCliente.toByteArray());
                 SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
                 byte[] dKey =  generateKey(KeyCliente.toByteArray());
@@ -125,14 +127,13 @@ public class ClientePassivo extends Cliente implements Runnable {
                 // Mensagem a enviar (-- encriptada --)
                 System.out.println("O que queres sussurrar?");
                 String mensagem = Read.readString();
+                // Encriptar mensagem
                 byte[] criptograma = encryptTextAES(mensagem, encryptKey);
-                
-                // Mandar o segredo e receber um segredo
+                // Enviar segredo e receber segredo
                 byte[] segredo = this.sendSecret_getSecretBYTE(criptograma);
-                
                 // Decrypt segredo
                 String plaintext = decryptTextAES(segredo, decryptKey);
-                System.out.println(plaintext);
+                System.out.println("Segredo recebido!\n ------> " + plaintext);
                 
                 break;
             case 2: // Puzzles de Merkle
@@ -164,33 +165,28 @@ public class ClientePassivo extends Cliente implements Runnable {
                 SecretKey secretKey = keyGen.generateKey();
                 
                 //Receber a chave pública da Alice e cifrar a chave com ela
-                this.sendSecretKeyGetPublicKey(secretKey);
+                this.sendSecretKeyUsePublicKey(secretKey);
                 
                 // Queremos trocar criptogramas
                 System.out.println("O que queres sussurrar?");
                 String mensagem3 = Read.readString();
+                // cifrar a mensagem
+                byte[] segredo3 = encryptTextAES(mensagem3, secretKey);
                 
-                //cifrar com AES
-                
-                // Receber N, e, phi
-                // BigInteger N = 
-                // BigInteger e = 
-                // BigInteger phi =
-                
-                // Calcular d
-                // BigInteger d = e.modInverse(phi);
-                
-                // Receber segredo
-                // byte[] segredo = ????
-                
-                // Decrypt segredo
-                // byte[] decrypted = rsa.decryptRSA(segredo, N, d);
-                
-                // Enviar segredo ???
-                // --------------------
+                //Enviar o segredo e receber o segredo
+                byte[] criptograma2 = this.sendSecret_getSecretBYTE(segredo3);
+                String plaintext3 = decryptTextAES(criptograma2, secretKey);
+                System.out.println("Segredo recebido!\n ------> " + plaintext3);
                 
                 break;
             case 4://Receber uma chave do servidor
+                try {
+                    ObjectInputStream fromServer = new ObjectInputStream(super.getServerSocket().getInputStream());
+                    SecretKey sk = (SecretKey)fromServer.readObject();
+                }catch(Exception e) {
+                    System.out.println(e);
+                }
+                
                 
                 break;
             case 5://Receber uma chave do clienteAtivo
@@ -211,7 +207,7 @@ public class ClientePassivo extends Cliente implements Runnable {
             
             //enviar à alice o Y
             toAlice.writeObject(Y);
-
+            
             toAlice.close();
             fromAlice.close();
             return X;
@@ -234,8 +230,8 @@ public class ClientePassivo extends Cliente implements Runnable {
             MerklePuzzle mkl = new MerklePuzzle();
             
             // Obter todos os puzzles
-            ArrayList<String> puzzles = (ArrayList<String>)fromAlice.readObject();           
-           
+            ArrayList<String> puzzles = (ArrayList<String>)fromAlice.readObject();
+            
             // O Bob escolhe um puzzle ao acaso e resolve-o.
             Random randomGenerator = new Random();
             int randomPuzzle = randomGenerator.nextInt(totalPuzzles);
@@ -244,7 +240,7 @@ public class ClientePassivo extends Cliente implements Runnable {
             boolean solved = false;
             while (!solved) {
                 key_guessing = mkl.decryptMerkle(mkl.getRandomKey(key_Length), puzzles.get(randomPuzzle));
-
+                
                 if (key_guessing != null && key_guessing.substring(0, 4).equals("Key=")) {
                     solved = true;
                 }
@@ -268,12 +264,12 @@ public class ClientePassivo extends Cliente implements Runnable {
         
         return null;
     }
-     
-    public void sendSecretKeyGetPublicKey(SecretKey simKey) throws ClassNotFoundException, Exception {
+    
+    public void sendSecretKeyUsePublicKey(SecretKey simKey) throws ClassNotFoundException, Exception {
         try {
             ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
             ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
-        
+            
             // Receber a chave pública da Alice
             PublicKey AlicePK= (PublicKey)fromAlice.readObject();
             
@@ -306,7 +302,7 @@ public class ClientePassivo extends Cliente implements Runnable {
             
             //Enviar criptograma do Bob à Alice
             toAlice.write(criptograma);
-
+            
             toAlice.close();
             fromAlice.close();
             return segredo;

@@ -5,9 +5,13 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 public class Server implements Runnable{
     
@@ -52,7 +56,7 @@ public class Server implements Runnable{
         ObjectInputStream inputText = new ObjectInputStream(clientInput.getInputStream());
         return ((int) inputText.readObject());
     }
-
+    
     @Override
     public void run() {
         
@@ -90,7 +94,7 @@ public class Server implements Runnable{
                     break;
                 case 2:
                     System.out.println("Registar um Cliente na sala de espera");
-
+                    
                     try {
                         //Receber os dados do ClientePassivo que quer ser passivo
                         data = (String)fromCliente.readObject();
@@ -100,10 +104,10 @@ public class Server implements Runnable{
                     
                     //Server check
                     try {
-                    if(users.add(data)) {
-                        toCliente.writeBoolean(true);
-                    } else {
-                        toCliente.writeBoolean(false);
+                        if(users.add(data)) {
+                            toCliente.writeBoolean(true);
+                        } else {
+                            toCliente.writeBoolean(false);
                         }
                     }catch(IOException e) {
                         System.out.println(e);
@@ -113,6 +117,26 @@ public class Server implements Runnable{
                     
                 case 3:
                     System.out.println("Distribuir chaves pelos clientes");
+                    try {
+                        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                        SecureRandom random = new SecureRandom();
+                        keyGen.init(256); // for example
+                        SecretKey secretKey = keyGen.generateKey();
+                        
+                        Socket BobSocket = (Socket)fromCliente.readObject();
+                        ObjectOutputStream toBob = new ObjectOutputStream(BobSocket.getOutputStream());
+                        
+                        toCliente.writeObject(secretKey);
+                        toBob.writeObject(secretKey);
+                        
+                        toBob.close();
+                        
+                    }catch(NoSuchAlgorithmException e) {
+                        System.out.println(e);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
                     // ClienteAtivo tem de enviar os 2 ips e fazer um socket temporário para enviar ao Bob
                     // Fazer chaves
                     break;
@@ -129,10 +153,10 @@ public class Server implements Runnable{
                     
                     //Server check
                     try {
-                    if(users.remove(data)) {
-                        toCliente.writeBoolean(true);
-                    } else {
-                        toCliente.writeBoolean(false);
+                        if(users.remove(data)) {
+                            toCliente.writeBoolean(true);
+                        } else {
+                            toCliente.writeBoolean(false);
                         }
                     }catch(IOException e) {
                         System.out.println(e);
