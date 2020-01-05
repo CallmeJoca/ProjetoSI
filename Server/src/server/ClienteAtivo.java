@@ -8,6 +8,9 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,8 +108,34 @@ public class ClienteAtivo extends Cliente {
         return null;
     }
     
-    public void sendPublicKeyGetSecretKey() {
-    
+    public byte[] sendPublicKeyGetSecretKey(PublicKey pk, PrivateKey sk) throws NoSuchAlgorithmException, Exception {
+        // Alice envia ao bob a sua chave publica, bob gera uma chave simétrica, e cifra-a com a chave p
+        try {
+            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
+            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
+        
+            // Enviar a chave pública ao Bob
+            toBob.writeObject(pk);
+            
+            // Receber a chave cifrada do Bob
+            ByteArrayOutputStream buf = new ByteArrayOutputStream();
+            byte buffer[] = new byte[1024];
+            for(int s; (s=fromBob.read(buffer)) != -1; ) {
+                buf.write(buffer, 0, s);
+            }
+            byte[] segredo = buf.toByteArray();
+            
+            fromBob.close();
+            toBob.close();
+            
+            byte[] chaveBob = AutoRSA.rsaDecrypt(segredo, sk);
+            
+            return chaveBob;
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+        return null;
     }
     
     public byte[] sendSecret_getSecretBYTE(byte[] criptograma) {
@@ -124,6 +153,8 @@ public class ClienteAtivo extends Cliente {
             }
             byte[] segredo = buf.toByteArray();
             
+            fromBob.close();
+            toBob.close();
             return segredo;
             
         }catch(IOException e) {

@@ -3,6 +3,7 @@ package server;
 import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -184,18 +185,25 @@ public class XiuuuMain {
                                                     
                                                 case 3: //RSA
                                                     //Encadeamento para fazer RSA
-                                                    RSA rsa = new RSA();
-                                                    BigInteger N = rsa.N;
-                                                    BigInteger e = rsa.e;
-                                                    BigInteger phi = rsa.phi;
+                                                    //RSA rsa = new RSA();
+                                                    //BigInteger N = rsa.N;
+                                                    //BigInteger e = rsa.e;
+                                                    //BigInteger phi = rsa.phi;
                                                     // Enviar N, e, phi
                                                     // -------------------
                                                     // -------------------
                                                     // ------------------- 
                                                     
-                                                    // Queremos trocar uma chave secreta
+                                                                                                        
+                                                    AutoRSA rsahalp = new AutoRSA();
+                                                    // Enviamos lhe a chame publica, usamos a privada para decifrar a chave que o Bob manda
+                                                    byte[] bobkey = activeClient.sendPublicKeyGetSecretKey(rsahalp.pubK, rsahalp.privK);
+                                                    
+                                                    // Queremos trocar um segredo
                                                     System.out.println("O que queres sussurrar?");
                                                     String mensagem3 = Read.readString();
+                                                    
+                                                    //cifrar com AES
                                                     
                                                     // Encryptar segredo
                                                     //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());

@@ -7,12 +7,15 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import static server.AES.encryptTextAES;
@@ -155,6 +158,20 @@ public class ClientePassivo extends Cliente implements Runnable {
                 break;
             case 3: // RSA
                 
+                KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                SecureRandom random = new SecureRandom();
+                keyGen.init(256); // for example
+                SecretKey secretKey = keyGen.generateKey();
+                
+                //Receber a chave pública da Alice e cifrar a chave com ela
+                this.sendSecretKeyGetPublicKey(secretKey);
+                
+                // Queremos trocar criptogramas
+                System.out.println("O que queres sussurrar?");
+                String mensagem3 = Read.readString();
+                
+                //cifrar com AES
+                
                 // Receber N, e, phi
                 // BigInteger N = 
                 // BigInteger e = 
@@ -252,8 +269,25 @@ public class ClientePassivo extends Cliente implements Runnable {
         return null;
     }
      
-    public void sendSecretKeyGetPublicKey(BigInteger N, BigInteger e, BigInteger phi) {
+    public void sendSecretKeyGetPublicKey(SecretKey simKey) throws ClassNotFoundException, Exception {
+        try {
+            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
+            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
         
+            // Receber a chave pública da Alice
+            PublicKey AlicePK= (PublicKey)fromAlice.readObject();
+            
+            //cifrar a chave criada pelo bob e envia-la à alice
+            byte[] data = simKey.getEncoded();
+            byte[] cipheredKey = AutoRSA.rsaEncrypt(data, AlicePK);
+            toAlice.write(cipheredKey);
+            
+            toAlice.close();
+            fromAlice.close();
+            
+        }catch(IOException e) {
+            System.out.println(e);
+        }
     }
     
     
