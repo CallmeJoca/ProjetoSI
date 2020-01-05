@@ -7,6 +7,8 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import static server.AES.encryptTextAES;
+import static server.DiffieHellman.calculateSharedKey;
 import static server.DiffieHellman.calculateXY;
 import static server.DiffieHellman.generateKey;
 import static server.DiffieHellman.getRandomBigInteger;
@@ -22,6 +24,13 @@ public class XiuuuMain {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
+        
+        Server server;
+        Cliente currClient;
+        ClienteAtivo activeClient;
+        ClientePassivo passiveClient;
+        
+        
         
         boolean newclient = true;
         int serverDoor = -1;
@@ -39,8 +48,8 @@ public class XiuuuMain {
                 case 1: // Querer entrar como servidor
                     System.out.println("Abrir qual porta para comunicação?");
                     serverDoor = Read.readInt();
-                    //Eventualmente invocar construtor que aceita um int que é uma porta
-                    System.out.println("Servidor está a correr silenciosamente...");
+                    Server servidor = new Server(serverDoor);
+                    servidor.startRunning();
                     break;
                     
                 case 2: // Querer entrar como cliente
@@ -68,7 +77,7 @@ public class XiuuuMain {
                     }
                     // Eventualmente chamar o construtor do cliente normal com os 4 argumentos anterioes
                     // e tentar estabelecer comunicação com o servidor
-                    Cliente currClient = new Cliente(username, serverIP, serverDoor, clientDoor);
+                    currClient = new Cliente(username, serverIP, serverDoor, clientDoor);
                     if(currClient.establishServerConnection()) {
                         connectedToClient = true;
                         // por tudo o que está em baixo
@@ -81,151 +90,162 @@ public class XiuuuMain {
                         switch(clientChoice1) { //Entrar em que modo de cliente ativo ou passivo, ou fazer pbkdf2
                             
                             case 1: // Cliente Ativo
+                                // Envia um 1 ao servidor, lista servidor lista os users, cliente escolhe um dos users e é devolvido o IP
+                                String clientIP = currClient.requestUsers();
+                                if(!clientIP.isEmpty()) {
+                                    activeClient = new ClienteAtivo(currClient, clientIP);
+                                    //enviar uma mensagem ao Bob a dizer que está a contactar com a Alice
+                                    if(activeClient.connectToBob()) {
+                                        
+                                        int clientChoice2 = -1;
+                                        do {
+                                            clientChoice2 = activeClientOptions();
+                                            
+                                            // Enviar ao cliente passivo clientChoice2
+                                            
+                                            switch(clientChoice2) {
+                                                case 1: // Diffie Hellman
+                                                    // Encadeamento para fazer DiffieHellman
+                                                    // Gera número primo
+                                                    DiffieHellman DH = new DiffieHellman();
+                                                    BigInteger P = DH.p;
+                                                    BigInteger g = getRandomBigInteger(P);
+                                                    BigInteger x = getRandomBigInteger(P);
+                                                    BigInteger X = calculateXY(g,P,x);
+                                                    
+                                                    // Enviar X e receber Y
+                                                    BigInteger Y = activeClient.sendXgetY(X);
+                                                    
+                                                    BigInteger KeyCliente = calculateSharedKey(x,P,Y);
+                                                    byte[] eKey = generateKey(KeyCliente.toByteArray());
+                                                    SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
+                                                    byte[] dKey =  generateKey(KeyCliente.toByteArray());
+                                                    SecretKey decryptKey = new SecretKeySpec(dKey, 0, dKey.length, "AES");
+                                                    
+                                                    System.out.println("O que queres sussurrar?");
+                                                    String mensagem = Read.readString();
+                                                    
+                                                    byte[] segredo = encryptTextAES(mensagem, encryptKey);
+                                                    //Mandar o segredo e receber um segredo
+                                                    byte[] criptograma = activeClient.sendSecret_getSecret(segredo);
+                                                    
+                                                    //String plaintext = decryptCypherAES ???
+                                                    //System.out.println(plaintext);
+                                                    
+                                                    
+                                                    break;
+                                                    
+                                                case 2: // Puzzles de Merkle
+                                                    // Encadeamento para fazer os Puzzles de Merkle
+                                                    
+                                                    MerklePuzzle mkl = new MerklePuzzle();
+                                                    int totalPuzzles = 2000;
+                                                    int key_Length = 4;
+                                                    
+                                                    ArrayList<String> puzzles = new ArrayList<>();
+                                                    ArrayList<String> puzzlesA = new ArrayList<>();
+                                                    ArrayList<String> keys = new ArrayList<>();
+                                                    
+                                                    
+                                                    //Gera puzzles
+                                                    for (int i = 0; i < totalPuzzles; ++i) {
+                                                        String puzzleKeys = mkl.getRandomString(16);
+                                                        keys.add(i, puzzleKeys);
+                                                        puzzlesA.add("Key=" + puzzleKeys + " & Puzzle=" + i);
+                                                        String ciphertext = mkl.encryptMerkle(mkl.getRandomKey(key_Length), "Key=" + puzzleKeys + " & Puzzle=" + i);
+                                                        //System.out.println("Puzzle " + i + " chave = " + puzzleKeys);
+                                                        puzzles.add(ciphertext);
+                                                    }
+                                                    
+                                                    // Cliente encia puzzles
+                                                    
+                                                    // Outro cliente devolve puzzle escolhido ---
+                                                    
+                                                    
+                                                    // Cliente obtem puzzle
+                                                    // String puzzle_chosen = puzzlesA.get(Integer.parseInt( --- puzzle recebido --- ));
+                                                    // String keyCliente = puzzle_chosen.substring(4, 20); //chave
+                                                    
+                                                    
+                                                    // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
+                                                    // byte[] encodedKey = Base64.getDecoder().decode(key);
+                                                    // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+                                                    
+                                                    
+                                                    // Queremos trocar uma chave secreta
+                                                    System.out.println("O que queres sussurrar?");
+                                                    
+                                                    // Encriptar mensagem
+                                                    // byte[] encryptedMessage = encryptTextAES(mensagem, originalKey);
+                                                    
+                                                    // Enviar mensagem ao outro cliente
+                                                    // ---------------------------
+                                                    
+                                                    
+                                                    break;
+                                                    
+                                                case 3: //RSA
+                                                    //Encadeamento para fazer RSA
+                                                    RSA rsa = new RSA();
+                                                    
+                                                    // Queremos trocar uma chave secreta
+                                                    System.out.println("O que queres sussurrar?");
+                                                    
+                                                    // Encryptar segredo
+                                                    //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());
+                                                    
+                                                    // Enviar segredo
+                                                    // ----------------
+                                                    
+                                                    break;
+                                                    
+                                                case 4: // Servidor fornecer chaves
+                                                    // Encadeamento para o servidor fornecer chaves
+                                                    // Queremos trocar uma chave secreta
+                                                    System.out.println("O que queres sussurrar?");
+                                                    break;
+                                                    
+                                                case 5: // Ser um Agente de Confiança
+                                                    // Servir de AC
+                                                    // Queremos trocar uma chave secreta
+                                                    System.out.println("O que queres sussurrar?");
+                                                    break;
+                                                    
+                                                case 0:
+                                                    break;
+                                                    
+                                            }// fim do 3º switch
+                                        }while(clientChoice2 < 0 || clientChoice2 > 5);// Fim do 3º while
+                                    }else
+                                        System.out.println("Something went wrong");
+                                }else
+                                    System.out.println("Something went wrong");
                                 
-                                
-                                // Client.askUserList();  ENVIAR 1 PARA O SERVIDOR
-                                // Comunicar com o servidor que queres uma lista de users à espera de ser sussurrados
-                                System.out.println("\nPara quem queres sussurrar?");
-                                String whisperTo = Read.readString();
-                                
-                                /*if(listaUsers.contains(whisperTo)) {
-                                // Invocar método boolean capaz de estabelecer comunicação de 2 clientes
-                                //if(activeClient.tryClient(whisperTo, porta
-                                }*/
-                                
-                                //Dentro do if
-                                int clientChoice2 = -1;
-                                do {
-                                    clientChoice2 = activeClientOptions();
-                                    
-                                    // Enviar ao cliente passivo clientChoice2
-                                    
-                                    switch(clientChoice2) {
-                                        case 1: // Diffie Hellman
-                                            // Encadeamento para fazer DiffieHellman
-                                            // Gera número primo
-                                            DiffieHellman DH = new DiffieHellman();
-                                            BigInteger P = DH.p;
-                                            // Gera g entre 1 e P
-                                            BigInteger g = getRandomBigInteger(P);
-                                            // Cliente gera x
-                                            BigInteger x = getRandomBigInteger(P);
-                                            
-                                            // Cliente gera X
-                                            BigInteger X = calculateXY(g,P,x);
-                                            
-                                            // Enviar X ao outro cliente
-                                            // --------------------------
-                                            
-                                            // Recebe Y do outro cliente
-                                            // -------------------------
-                                            // BigInteger Y = ------------------
-                                            
-                                            // Calcular K
-                                            //BigInteger KeyCliente = calculateSharedKey(x,P,Y);
-                                            
-                                            // Criar chave a partir de K
-                                            //byte[] eKey = generateKey(KeyCliente.toByteArray());
-                                            //SecretKey encryptKey = new SecretKeySpec(eKey, 0, eKey.length, "AES");
-                                            //byte[] dKey =  generateKey(KeyCliente.toByteArray());
-                                            //SecretKey decryptKey = new SecretKeySpec(dKey, 0, dKey.length, "AES");
-                                            
-                                            
-                                            // Queremos trocar uma chave secreta
-                                            System.out.println("O que queres sussurrar?");
-                                            break;
-                                            
-                                        case 2: // Puzzles de Merkle
-                                            // Encadeamento para fazer os Puzzles de Merkle
-                                            
-                                            MerklePuzzle mkl = new MerklePuzzle();
-                                            int totalPuzzles = 2000;
-                                            int key_Length = 4;
-                                            
-                                            ArrayList<String> puzzles = new ArrayList<>();
-                                            ArrayList<String> puzzlesA = new ArrayList<>();
-                                            ArrayList<String> keys = new ArrayList<String>();
-                                            
-                                            
-                                            //Gera puzzles
-                                            for (int i = 0; i < totalPuzzles; ++i) {
-                                                String puzzleKeys = mkl.getRandomString(16);
-                                                keys.add(i, puzzleKeys);
-                                                puzzlesA.add("Key=" + puzzleKeys + " & Puzzle=" + i);
-                                                String ciphertext = mkl.encryptMerkle(mkl.getRandomKey(key_Length), "Key=" + puzzleKeys + " & Puzzle=" + i);
-                                                //System.out.println("Puzzle " + i + " chave = " + puzzleKeys);
-                                                puzzles.add(ciphertext);
-                                            }
-                                            
-                                            // Cliente encia puzzles
-                                            
-                                            // Outro cliente devolve puzzle escolhido ---
-                                            
-                                            
-                                            // Cliente obtem puzzle
-                                            // String puzzle_chosen = puzzlesA.get(Integer.parseInt( --- puzzle recebido --- ));
-                                            // String keyCliente = puzzle_chosen.substring(4, 20); //chave
-                                            
-                                            
-                                            // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
-                                            // byte[] encodedKey = Base64.getDecoder().decode(key);
-                                            // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
-                                            
-                                            
-                                            // Queremos trocar uma chave secreta
-                                            System.out.println("O que queres sussurrar?");
-                                            
-                                            // Encriptar mensagem
-                                            // byte[] encryptedMessage = encryptTextAES(mensagem, originalKey);
-                                            
-                                            // Enviar mensagem ao outro cliente
-                                            // ---------------------------
-                                            
-                                            
-                                            break;
-                                            
-                                        case 3: //RSA
-                                            //Encadeamento para fazer RSA
-                                            RSA rsa = new RSA();
-                                            
-                                            // Queremos trocar uma chave secreta
-                                            System.out.println("O que queres sussurrar?");
-                                            
-                                            // Encryptar segredo
-                                            //byte[] encrypted = rsa.encryptRSA(segredo.getBytes());
-                                            
-                                            // Enviar segredo
-                                            // ----------------
-                                            
-                                            break;
-                                            
-                                        case 4: // Servidor fornecer chaves
-                                            // Encadeamento para o servidor fornecer chaves
-                                            // Queremos trocar uma chave secreta
-                                            System.out.println("O que queres sussurrar?");
-                                            break;
-                                            
-                                        case 5: // Ser um Agente de Confiança
-                                            // Servir de AC
-                                            // Queremos trocar uma chave secreta
-                                            System.out.println("O que queres sussurrar?");
-                                            break;
-                                            
-                                        case 0:
-                                            break;
-                                    }// fim do 3º switch
-                                }while(clientChoice2 < 0 || clientChoice2 > 5);// Fim do 3º while
                                 
                                 break;
+                                
                             case 2: // Cliente Passivo
-                                // Correr numa thread nova?
-                                // Espera de sinalização para começar comunicação
-                                // ClientePassivo passiveClient = new ClientePassivo(currClient);
-                                // passiveClient.run()
-                                // Estabelecer e estruturar métodos dentro do ClientePassivo
-                                
+                                // Enviar dados do cliente à espera de ser sussurrado
+                                if(currClient.sendData())
+                                    System.out.println("Dados enviados para o Servidor");
+
+                                //espera que o servidor lhe envie o IP da pessoa que lhe contactou
+                                String AliceIP = currClient.receiveClientIP();
+                                if(!AliceIP.isEmpty()) {
+                                    passiveClient = new ClientePassivo(currClient, AliceIP);
+                                    if(passiveClient.connectToAlice()) {
+                                        // Aqui já temos a certeza que não é estar mais na lista de users do servidor
+                                        passiveClient.requestDelete();
+                                        passiveClient.run();
+                                    }else {
+                                        System.out.println("Something went wrong.");
+                                    }
+                                }else {
+                                    System.out.println("Something went wrong");
+                                }
                                 
                                 break;
+                                
                             case 3: // Fazer PBKDF2
                                 
                                 System.out.println("String que vai servir de password :");
@@ -322,9 +342,7 @@ public class XiuuuMain {
         return hexString.toString();
     }
     
-    public static void listPendingUsers() {
     
-    }
     
 }// Fim da classe
 
