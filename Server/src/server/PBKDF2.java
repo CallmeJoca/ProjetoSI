@@ -65,9 +65,9 @@ public class PBKDF2 {
         byte[] encValue = cipher.doFinal(mensagem.getBytes());
         
         // Encode usando BASE64
-        String encodeinput = Base64.getEncoder().encodeToString(encValue);
+        String base64criptograma = Base64.getEncoder().encodeToString(encValue);
         
-        return encodeinput;
+        return base64criptograma;
     }
     
 }

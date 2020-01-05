@@ -5,12 +5,12 @@ import java.util.Random;
  
 public class RSA
 {
-    private final BigInteger p;
-    private BigInteger q;
+    BigInteger p;
+    BigInteger q;
     BigInteger N;
-    private BigInteger phi;
+    BigInteger phi;
     BigInteger e;
-    private BigInteger d;
+    BigInteger d;
     private int bitlength = 1024;
     private Random r;
  

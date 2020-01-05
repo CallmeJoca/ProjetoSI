@@ -90,8 +90,7 @@ public class Server implements Runnable{
                     break;
                 case 2:
                     System.out.println("Registar um Cliente na sala de espera");
-                    
-                    
+
                     try {
                         //Receber os dados do ClientePassivo que quer ser passivo
                         data = (String)fromCliente.readObject();
@@ -99,7 +98,16 @@ public class Server implements Runnable{
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
-                    users.add(data);
+                    //Server check
+                    try {
+                    if(users.add(data)) {
+                        toCliente.writeBoolean(true);
+                    } else {
+                        toCliente.writeBoolean(false);
+                        }
+                    }catch(IOException e) {
+                        System.out.println(e);
+                    }
                     
                     break;
                     
@@ -122,9 +130,9 @@ public class Server implements Runnable{
                     //Server check
                     try {
                     if(users.remove(data)) {
-                        toCliente.writeUTF("Foste bem removido da fila de espera");
+                        toCliente.writeBoolean(true);
                     } else {
-                        toCliente.writeUTF("Não foi possível remover");
+                        toCliente.writeBoolean(false);
                         }
                     }catch(IOException e) {
                         System.out.println(e);

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import static server.AES.decryptTextAES;
@@ -128,13 +129,12 @@ public class XiuuuMain {
                                                     
                                                     byte[] segredo = encryptTextAES(mensagem, encryptKey);
                                                     //Mandar o segredo e receber um segredo
-                                                    byte[] criptograma = activeClient.sendSecret_getSecret(segredo);
+                                                    byte[] criptograma = activeClient.sendSecret_getSecretBYTE(segredo);
                                                     
                                                     // Decrypt segredo
                                                     String plaintext = decryptTextAES(criptograma, decryptKey);
                                                     System.out.println(plaintext);
-                                                    
-                                                    
+
                                                     break;
                                                     
                                                 case 2: // Puzzles de Merkle
@@ -161,25 +161,24 @@ public class XiuuuMain {
                                                     // Cliente envia puzzles
                                                     // Outro cliente devolve puzzle escolhido
                                                     // Cliente obtem puzzle
-                                                    // String puzzle_recebido = activeClient.sendPuzzleGetPuzzle(); 
-                                                    // String puzzle_chosen = puzzlesA.get(Integer.parseInt(puzzle_recebido));
+                                                    String puzzle_recebido = activeClient.sendPuzzleGetPuzzle(puzzles); 
+                                                    String puzzle_chosen = puzzlesA.get(Integer.parseInt(puzzle_recebido));
                                                     
                                                     // Obtem chave
-                                                    // String keyCliente = puzzle_chosen.substring(4, 20); //chave
-                                                    // String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
-                                                    // byte[] encodedKey = Base64.getDecoder().decode(key);
-                                                    // SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+                                                    String keyCliente = puzzle_chosen.substring(4, 20); //chave
+                                                    String key = Base64.getEncoder().encodeToString(keyCliente.getBytes());
+                                                    byte[] encodedKey = Base64.getDecoder().decode(key);
+                                                    SecretKey originalKey = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
                                                     
-                                                    
-                                                    // Queremos trocar uma chave secreta
+                                                    // Queremos trocar criptogramas
                                                     System.out.println("O que queres sussurrar?");
                                                     String mensagem2 = Read.readString();
                                                     // Encriptar mensagem
-                                                    // byte[] encryptedMessage = encryptTextAES(mensagem, originalKey);
-                                                    
-                                                    // Enviar mensagem ao outro cliente
-                                                    // ---------------------------
-                                                    
+                                                    byte[] encryptedMessage = encryptTextAES(mensagem2, originalKey);
+                                                    //decifrar encryptedMessage
+                                                    byte[] segredo2 = activeClient.sendSecret_getSecretBYTE(encryptedMessage);
+                                                     String decryptedMessage = decryptTextAES(segredo2, originalKey);
+                                                     System.out.println("Segredo recebido!\n ------> " + decryptedMessage );
                                                     
                                                     break;
                                                     
@@ -259,14 +258,14 @@ public class XiuuuMain {
                                 // Obtenção de PBKDF2 da password especificada pelo utilizador.
                                 String pbkdf2 = PBKDF2.getPBKDF2(passwd);
                                 
-                                
-                                
                                 // os métodos definidos em PBKDF2.java abordam ambos os requisitos
                                 System.out.println("Qual a mensagem que se vai cifrar?");
                                 String msg = Read.readString();
                                 String msgcifrada = PBKDF2.cifrarComPBKDF2(msg, pbkdf2);
                                 
+                                // Criptograma em base64
                                 System.out.println("Mensagem cifrada: " + msgcifrada);
+                                
                                 break;
                             case 0:
                                 // Nao esquecer de cortar as ligações com o servidor ou cliente

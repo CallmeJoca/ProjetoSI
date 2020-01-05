@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,17 +24,25 @@ public class ClienteAtivo extends Cliente {
     
     public ClienteAtivo(Cliente cliente, String BobIpAddress) {
         super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
+        super.setServerSocket((cliente.getServerSocket()));
         this.BobIpAddress = BobIpAddress;
     }
     
     public boolean connectToBob() {
         try {
             BobSS = new Socket(BobIpAddress, this.getClientDoor());
-            ObjectOutputStream dataOut = new ObjectOutputStream(BobSS.getOutputStream());
-            dataOut.writeUTF("Olá eu sou o " + this.getUsername() + " eu vou guiar a conversa, mas temos de sussurrar ok?");
-            dataOut.flush();
+            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
+            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
+            //enviar ao bob o meu ip
+            InetAddress inetAddress = InetAddress.getLocalHost();            
+            toBob.writeUTF(inetAddress.getHostAddress());
             
-            dataOut.close();
+            //Enviar mensagem à alice, receber mensagem da alice
+            toBob.writeUTF("Olá eu sou o/a " + this.getUsername() + " eu vou guiar a conversa, mas temos de sussurrar ok?");
+            System.out.println(fromBob.readUTF());
+
+            toBob.close();
+            fromBob.close();
             
             return true;
         }catch(IOException e) {
@@ -96,8 +105,9 @@ public class ClienteAtivo extends Cliente {
         return null;
     }
     
+    public 
     
-    public byte[] sendSecret_getSecret(byte[] criptograma) {
+    public byte[] sendSecret_getSecretBYTE(byte[] criptograma) {
         try {
             ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
             ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
@@ -118,6 +128,5 @@ public class ClienteAtivo extends Cliente {
             System.out.println(e);
         }
         return null;
-    }
-       
+    }  
 }

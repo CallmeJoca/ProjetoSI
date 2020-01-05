@@ -76,7 +76,7 @@ public class Cliente {
         try {
             serverSocket = new Socket(serverIP, serverDoor);
             DataOutputStream dataOut = new DataOutputStream(serverSocket.getOutputStream());
-            dataOut.writeUTF(username + "conectou-se ao servidor.");
+            dataOut.writeUTF(username + " conectou-se ao servidor.");
             dataOut.flush();
             
             dataOut.close();
@@ -95,10 +95,10 @@ public class Cliente {
             ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
             InetAddress inetAddress = InetAddress.getLocalHost();
             String info = username + "__" + inetAddress.getHostAddress();
-            toServer.write(4);
+            toServer.write(2);
             toServer.writeUTF(info);
+            System.out.println(fromServer.readBoolean());
             //
-            
             toServer.close();
             fromServer.close();
             return true;
@@ -107,18 +107,6 @@ public class Cliente {
             System.out.println(e);
             return false;
         }   
-    }
-   
-    @Override
-    public Object clone() {
-        Cliente cliente = new Cliente();
-        cliente.username = this.username;
-        cliente.serverDoor = this.serverDoor;
-        cliente.clientDoor = this.clientDoor;
-        cliente.serverDoor = this.serverDoor;
-        cliente.serverSocket = this.serverSocket;
-        
-        return cliente;
     }
     
     public boolean closeServerConnection() {
@@ -135,7 +123,7 @@ public class Cliente {
         try {
             ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
             return in.readUTF();
-        }catch(Exception e) {
+        }catch(IOException e) {
             System.out.println(e);
             return null;
         }
@@ -171,7 +159,7 @@ public class Cliente {
             
             return nome;
             
-        }catch(Exception e) {
+        }catch(IOException | ClassNotFoundException e) {
             System.out.println(e);
         }
         return null;
