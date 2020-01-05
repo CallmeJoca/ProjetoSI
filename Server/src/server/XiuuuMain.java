@@ -157,7 +157,7 @@ public class XiuuuMain {
                                                         puzzles.add(ciphertext);
                                                     }
                                                     
-                                                    // Cliente encia puzzles
+                                                    // Cliente envia puzzles
                                                     
                                                     // Outro cliente devolve puzzle escolhido ---
                                                     
