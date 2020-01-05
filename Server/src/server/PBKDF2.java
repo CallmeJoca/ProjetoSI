@@ -53,16 +53,18 @@ public class PBKDF2 {
     public static String cifrarComPBKDF2(String mensagem, String PBKDF2_from_user_pw) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, InvalidParameterSpecException, ShortBufferException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
         
         Cipher cipher = Cipher.getInstance("AES");
-
+        
+        // Obtenção de uma chave.
         KeySpec spec = new PBEKeySpec(PBKDF2_from_user_pw.toCharArray(), getNextSalt(), 65536, 256); // AES-256
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] key = f.generateSecret(spec).getEncoded();
         SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
 
+        // Cifrar a mensagem com a chave obtida anteriormente.
         cipher.init(Cipher.ENCRYPT_MODE, keySpec);
         byte[] encValue = cipher.doFinal(mensagem.getBytes());
         
-        // Encode using BASE64
+        // Encode usando BASE64
         String encodeinput = Base64.getEncoder().encodeToString(encValue);
         
         return encodeinput;

@@ -256,13 +256,17 @@ public class XiuuuMain {
                                 System.out.println("String que vai servir de password :");
                                 String passwd = Read.readString();
                                 
-                                PBKDF2 alg = new PBKDF2();
+                                // Obtenção de PBKDF2 da password especificada pelo utilizador.
+                                String pbkdf2 = PBKDF2.getPBKDF2(passwd);
                                 
+                                
+                                
+                                // os métodos definidos em PBKDF2.java abordam ambos os requisitos
                                 System.out.println("Qual a mensagem que se vai cifrar?");
                                 String msg = Read.readString();
-                                // É preciso obter uma chave
-                                // é preciso cifrar depois a mensagem com a chave
+                                String msgcifrada = PBKDF2.cifrarComPBKDF2(msg, pbkdf2);
                                 
+                                System.out.println("Mensagem cifrada: " + msgcifrada);
                                 break;
                             case 0:
                                 // Nao esquecer de cortar as ligações com o servidor ou cliente
