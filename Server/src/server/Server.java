@@ -52,6 +52,7 @@ public class Server implements Runnable{
         ObjectInputStream inputText = new ObjectInputStream(clientInput.getInputStream());
         return ((int) inputText.readObject());
     }
+
     @Override
     public void run() {
         
