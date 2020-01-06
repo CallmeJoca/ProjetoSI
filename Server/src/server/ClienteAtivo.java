@@ -37,11 +37,11 @@ public class ClienteAtivo extends Cliente {
             ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
             //enviar ao bob o meu ip
             InetAddress inetAddress = InetAddress.getLocalHost();
-            toBob.writeUTF(inetAddress.getHostAddress());
+            toBob.writeObject(inetAddress.getHostAddress());
             
             //Enviar mensagem à alice, receber mensagem da alice
-            toBob.writeUTF("Olá eu sou o/a " + this.getUsername() + " eu vou guiar a conversa, mas temos de sussurrar ok?");
-            System.out.println(fromBob.readUTF());
+            toBob.writeObject("Olá eu sou o/a " + this.getUsername() + " eu vou guiar a conversa, mas temos de sussurrar ok?");
+            System.out.println((String)fromBob.readObject());
             
             toBob.close();
             fromBob.close();
@@ -50,7 +50,10 @@ public class ClienteAtivo extends Cliente {
         }catch(IOException e) {
             System.out.println("Something went wrong, try again later™");
             return false;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClienteAtivo.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
     
     public boolean closeBobConnection() {
@@ -95,7 +98,7 @@ public class ClienteAtivo extends Cliente {
             toBob.writeObject(puzzles);
             
             //receber um puzzle do Bob
-            String puzzle = fromBob.readUTF();
+            String puzzle = (String) fromBob.readObject();
             
             toBob.close();
             fromBob.close();
@@ -103,6 +106,8 @@ public class ClienteAtivo extends Cliente {
             
         }catch(IOException e) {
             System.out.println(e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClienteAtivo.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
