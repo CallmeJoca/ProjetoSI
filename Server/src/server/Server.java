@@ -39,20 +39,21 @@ public class Server implements Runnable{
     
     public void startRunning() {
         
-            System.out.println("Servidor está a correr silenciosamente... à espera de input");
-            try {
-                sSocket = new ServerSocket(portaAberta);
-                clientSocket = sSocket.accept();
-                
-                fromCliente = new ObjectInputStream(clientSocket.getInputStream());
-                toCliente = new ObjectOutputStream(clientSocket.getOutputStream());
-                
-            } catch (IOException e) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
-            }
+        System.out.println("Servidor está a correr silenciosamente... à espera de input");
+        try {
+            sSocket = new ServerSocket(portaAberta);
+            clientSocket = sSocket.accept();
             
-            t = new Thread(this);
-            t.start();
+            fromCliente = new ObjectInputStream(clientSocket.getInputStream());
+            toCliente = new ObjectOutputStream(clientSocket.getOutputStream());
+            
+        } catch (IOException e) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
+            return;
+        }
+        
+        t = new Thread(this);
+        t.start();
     }
     
     
@@ -70,20 +71,25 @@ public class Server implements Runnable{
         
         //Primeiro contacto, cliente base estabelece ligação com servidor
         try {
-            clientArrival = (String)fromCliente.readObject();
+            System.out.println(clientArrival = (String)fromCliente.readObject());
             toCliente.writeObject("Welcome, " + clientArrival);
         } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
         
         while(true) {
             
             // Primeiro contacto que as subclasses cliente têm com o servidor
-            try { option = (int)fromCliente.readObject(); } catch (IOException ex) {
+            try { option = (int)fromCliente.readObject(); }
+            catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 return;
-            }catch(ClassNotFoundException e) {
-                return;
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
             
             switch (option) {
                 
@@ -94,6 +100,7 @@ public class Server implements Runnable{
                         toCliente.writeObject(users);
                     } catch (IOException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        return;
                     }
                     
                     // Adquirir os users e mandar ao cliente que lhe pediu
@@ -104,19 +111,22 @@ public class Server implements Runnable{
                     try {
                         //Receber os dados do ClientePassivo que quer ser passivo
                         data = (String)fromCliente.readObject();
+                        System.out.println(data);
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        return;
                     }
                     
                     //Server check
                     try {
                         if(users.add(data)) {
-                            toCliente.writeBoolean(true);
+                            toCliente.writeObject(true);
                         } else {
-                            toCliente.writeBoolean(false);
+                            toCliente.writeObject(false);
                         }
                     }catch(IOException e) {
                         System.out.println(e);
+                        return;
                     }
                     
                     break;
@@ -139,10 +149,11 @@ public class Server implements Runnable{
                         
                         toBob.close();
                         
-                    }catch(NoSuchAlgorithmException e) {
+                    } catch(NoSuchAlgorithmException e) {
                         System.out.println(e);
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException | ClassNotFoundException e) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
+                        return;
                     }
                     
                     // ClienteAtivo tem de enviar os 2 ips e fazer um socket temporário para enviar ao Bob
@@ -157,17 +168,19 @@ public class Server implements Runnable{
                         data = (String)fromCliente.readObject();
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        return;
                     }
                     
                     //Server check
                     try {
                         if(users.remove(data)) {
-                            toCliente.writeBoolean(true);
+                            toCliente.writeObject(true);
                         } else {
-                            toCliente.writeBoolean(false);
+                            toCliente.writeObject(false);
                         }
                     }catch(IOException e) {
                         System.out.println(e);
+                        return;
                     }
                     
                     break;
