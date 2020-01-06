@@ -229,7 +229,7 @@ public class XiuuuMain {
                                                         break;
                                                         
                                                 }// fim do 3º switch
-                                            }while(clientChoice2 < 0 || clientChoice2 > 5);// Fim do 3º while
+                                            }while(clientChoice2 >= 0 || clientChoice2 <= 5);// Fim do 3º while
                                         }else
                                             System.out.println("Something went wrong");
                                     }else
@@ -282,7 +282,7 @@ public class XiuuuMain {
                                     break;
                                     
                             }// Fim do 2º switch
-                        }while(clientChoice1 < 0 || clientChoice1 > 3);// Fim do 2º while
+                        }while(clientChoice1 >= 0 || clientChoice1 <= 3);// Fim do 2º while
                         // por tudo o que está em baixo
                     }
                     // Talvez declarar Clientes logo debaixo da main?
