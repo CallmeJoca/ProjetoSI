@@ -4,10 +4,12 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStre
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
@@ -25,7 +27,7 @@ public class MerklePuzzle {
     public MerklePuzzle() {
         try {
             cipher = Cipher.getInstance("DES");
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             System.err.println(e);
         }
     }
@@ -72,6 +74,7 @@ public class MerklePuzzle {
             byte[] utf8 = cipher.doFinal(dec);
             return new String(utf8, "UTF8");
         } catch (Exception e) {
+            System.out.println(e);
         }
 
         return null;

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 public class Read {
 
+    // Ler Int, devolver Int
     public static int readInt() {
 
         while (true) {
@@ -17,6 +18,8 @@ public class Read {
         }
     }
 
+    
+    // Ler string, devolve String
     public static String readString() {
         String str = null;
 
