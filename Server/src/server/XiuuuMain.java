@@ -73,7 +73,7 @@ public class XiuuuMain {
                             
                             enlistcheck = Read.readInt();
                             
-                        }while(enlistcheck >= 0 || enlistcheck <= 1); // sair do enlist
+                        }while(enlistcheck < 0 || enlistcheck > 1); // sair do enlist
                         newclient = false;
                     }
                     // Eventualmente chamar o construtor do cliente normal com os 4 argumentos anterioes
@@ -312,7 +312,7 @@ public class XiuuuMain {
             System.out.println("0 - Sair");
             choice = Read.readInt();
             
-        }while(choice >= 0 || choice <= 2);
+        }while(choice < 0 || choice > 2);
         
         return choice;
     }
@@ -329,7 +329,7 @@ public class XiuuuMain {
             System.out.println("0 - Voltar");
             
             choice = Read.readInt();
-        }while(choice >= 0 || choice <= 3);
+        }while(choice < 0 || choice > 3);
         
         return choice;
     }
@@ -347,7 +347,7 @@ public class XiuuuMain {
             System.out.println("5 - Trocar uma chave secreta usando-me como um agente de confiaça.\n");
             System.out.println("0 - Voltar");
             choice = Read.readInt();
-        }while(choice >= 0 || choice <= 5);
+        }while(choice < 0 || choice > 5);
         
         return choice;
     }
