@@ -26,8 +26,26 @@ public class Cliente {
     private int serverDoor;
     private int clientDoor; // pode ser mudado para estático?
     private Socket serverSocket;
-    private ObjectInputStream fromServer;
+    
     private ObjectOutputStream toServer;
+    private ObjectInputStream fromServer;
+
+    public ObjectInputStream getFromServer() {
+        return fromServer;
+    }
+
+    public void setFromServer(ObjectInputStream fromServer) {
+        this.fromServer = fromServer;
+    }
+
+    public ObjectOutputStream getToServer() {
+        return toServer;
+    }
+
+    public void setToServer(ObjectOutputStream toServer) {
+        this.toServer = toServer;
+    }
+    
     //  Construtores
     public Cliente() {}
     
@@ -83,30 +101,14 @@ public class Cliente {
     //  Método que permite esta instancia de cliente comunicar com o servidor
     public boolean establishServerConnection() throws ClassNotFoundException {
         
-        boolean loop = true;
-        
         try {
             serverSocket = new Socket(serverIP, serverDoor);
             toServer = new ObjectOutputStream(serverSocket.getOutputStream());
             fromServer = new ObjectInputStream(serverSocket.getInputStream());
-           
-            
-            
-            System.out.println("fuck");
             
             toServer.writeObject(username + " conectou-se ao servidor.");
-            
-            System.out.println("this");
-            
             System.out.println((String)fromServer.readObject());
-            
-            
-            System.out.println("shit");
-            
-            
-//            toServer.close();
-//            fromServer.close();
-              
+                          
             return true;
             
         }catch(IOException e) {
@@ -122,10 +124,7 @@ public class Cliente {
             String info = username + "__" + inetAddress.getHostAddress();
             toServer.writeObject(2);
             toServer.writeObject(info);
-            
-            //
-            //toServer.close();
-            //fromServer.close();
+
             return (Boolean)fromServer.readObject();
 
         }catch(IOException e) {
