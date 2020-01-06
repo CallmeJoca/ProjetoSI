@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Cliente {
@@ -78,16 +80,27 @@ public class Cliente {
     }
     
     //  Método que permite esta instancia de cliente comunicar com o servidor
-    public boolean establishServerConnection() {
+    public boolean establishServerConnection() throws ClassNotFoundException {
+        
+        boolean loop = true;
         
         try {
             serverSocket = new Socket(serverIP, serverDoor);
             ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
             ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
            
-            toServer.writeUTF(username + " conectou-se ao servidor.");
-            System.out.println(fromServer.readUTF());
             
+            
+            System.out.println("fuck");
+            
+            toServer.writeObject(username + " conectou-se ao servidor.");
+            
+            System.out.println("this");
+            
+            System.out.println((String)fromServer.readObject());
+            
+            
+            System.out.println("shit");
             
             
             toServer.close();
@@ -108,7 +121,7 @@ public class Cliente {
             InetAddress inetAddress = InetAddress.getLocalHost();
             String info = username + "__" + inetAddress.getHostAddress();
             toServer.write(2);
-            toServer.writeUTF(info);
+            toServer.writeObject(info);
             System.out.println(fromServer.readBoolean());
             //
             toServer.close();
@@ -134,11 +147,14 @@ public class Cliente {
     public String receiveClientIP() {
         try {
             ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
-            return in.readUTF();
-        }catch(IOException e) {
-            System.out.println(e);
+            return (String)in.readObject();
+        }catch(IOException ex) {
+            System.out.println(ex);
             return null;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
     public String requestUsers() {
