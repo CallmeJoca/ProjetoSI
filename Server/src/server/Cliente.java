@@ -25,9 +25,27 @@ public class Cliente {
     private String serverIP;
     private int serverDoor;
     private int clientDoor; // pode ser mudado para estático?
+    
+    
     private Socket serverSocket;
-    private ObjectInputStream fromServer;
-    private ObjectOutputStream toServer;
+    protected ObjectInputStream fromServer;
+    protected ObjectOutputStream toServer;
+
+    public ObjectInputStream getFromServer() {
+        return fromServer;
+    }
+
+    public void setFromServer(ObjectInputStream fromServer) {
+        this.fromServer = fromServer;
+    }
+
+    public ObjectOutputStream getToServer() {
+        return toServer;
+    }
+
+    public void setToServer(ObjectOutputStream toServer) {
+        this.toServer = toServer;
+    }
     //  Construtores
     public Cliente() {}
     

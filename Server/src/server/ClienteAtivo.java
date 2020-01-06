@@ -25,15 +25,16 @@ public class ClienteAtivo extends Cliente {
     private ObjectOutputStream toBob;
     private ObjectInputStream fromBob;
     
-    private ObjectOutputStream toServer;
-    private ObjectInputStream fromServer;
-    
     public ClienteAtivo() {}
     
     public ClienteAtivo(Cliente cliente, String BobIpAddress) {
+        
         super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
+        super.setFromServer(cliente.getFromServer());
+        super.setToServer(cliente.getToServer());
         super.setServerSocket((cliente.getServerSocket()));
         this.BobIpAddress = BobIpAddress;
+        
     }
     
     public boolean connectToBob() {
@@ -133,8 +134,6 @@ public class ClienteAtivo extends Cliente {
     
     public SecretKey askServerForKeys() throws ClassNotFoundException {
         try {
-            toServer =new ObjectOutputStream(super.getServerSocket().getOutputStream());
-            fromServer =new ObjectInputStream(super.getServerSocket().getInputStream());
             // Enviar opcao para o servidor nos dar chaves
             toServer.write(3);
             // Enviar o socket do Bob
