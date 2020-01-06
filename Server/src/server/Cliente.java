@@ -26,7 +26,8 @@ public class Cliente {
     private int serverDoor;
     private int clientDoor; // pode ser mudado para estático?
     private Socket serverSocket;
-
+    private ObjectInputStream fromServer;
+    private ObjectOutputStream toServer;
     //  Construtores
     public Cliente() {}
     
@@ -86,8 +87,8 @@ public class Cliente {
         
         try {
             serverSocket = new Socket(serverIP, serverDoor);
-            ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
-            ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
+            toServer = new ObjectOutputStream(serverSocket.getOutputStream());
+            fromServer = new ObjectInputStream(serverSocket.getInputStream());
            
             
             
@@ -103,9 +104,9 @@ public class Cliente {
             System.out.println("shit");
             
             
-            toServer.close();
-            fromServer.close();
-            
+//            toServer.close();
+//            fromServer.close();
+              
             return true;
             
         }catch(IOException e) {
@@ -116,22 +117,24 @@ public class Cliente {
     
     public boolean sendData() {
         try {
-            ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
-            ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
+            
             InetAddress inetAddress = InetAddress.getLocalHost();
             String info = username + "__" + inetAddress.getHostAddress();
-            toServer.write(2);
+            toServer.writeObject(2);
             toServer.writeObject(info);
-            System.out.println(fromServer.readBoolean());
+            
             //
-            toServer.close();
-            fromServer.close();
-            return true;
+            //toServer.close();
+            //fromServer.close();
+            return (Boolean)fromServer.readObject();
 
         }catch(IOException e) {
             System.out.println(e);
             return false;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }   
+        return false;
     }
     
     public boolean closeServerConnection() {
@@ -146,8 +149,7 @@ public class Cliente {
     
     public String receiveClientIP() {
         try {
-            ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
-            return (String)in.readObject();
+            return (String)fromServer.readObject();
         }catch(IOException ex) {
             System.out.println(ex);
             return null;
@@ -160,10 +162,8 @@ public class Cliente {
     public String requestUsers() {
         
         try {
-            ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
-            ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
             //enviar 1 para listar users (Servidor entrar na opção de listar users)
-            toServer.write(1);
+            toServer.writeObject(1);
             ArrayList<String> users = (ArrayList<String>)fromServer.readObject();
             printUsers(users);
             

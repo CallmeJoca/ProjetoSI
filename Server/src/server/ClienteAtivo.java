@@ -22,6 +22,12 @@ public class ClienteAtivo extends Cliente {
     private String BobIpAddress;
     private Socket BobSS;
     
+    private ObjectOutputStream toBob;
+    private ObjectInputStream fromBob;
+    
+    private ObjectOutputStream toServer;
+    private ObjectInputStream fromServer;
+    
     public ClienteAtivo() {}
     
     public ClienteAtivo(Cliente cliente, String BobIpAddress) {
@@ -33,8 +39,8 @@ public class ClienteAtivo extends Cliente {
     public boolean connectToBob() {
         try {
             BobSS = new Socket(BobIpAddress, this.getClientDoor());
-            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
-            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
+            toBob = new ObjectOutputStream(BobSS.getOutputStream());
+            fromBob = new ObjectInputStream(BobSS.getInputStream());
             //enviar ao bob o meu ip
             InetAddress inetAddress = InetAddress.getLocalHost();
             toBob.writeObject(inetAddress.getHostAddress());
@@ -42,10 +48,7 @@ public class ClienteAtivo extends Cliente {
             //Enviar mensagem à alice, receber mensagem da alice
             toBob.writeObject("Olá eu sou o/a " + this.getUsername() + " eu vou guiar a conversa, mas temos de sussurrar ok?");
             System.out.println((String)fromBob.readObject());
-            
-            toBob.close();
-            fromBob.close();
-            
+             
             return true;
         }catch(IOException e) {
             System.out.println("Something went wrong, try again later™");
@@ -68,16 +71,11 @@ public class ClienteAtivo extends Cliente {
     
     public BigInteger sendXgetY(BigInteger X) {
         try {
-            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
-            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
             //enviar ao bob o X
             toBob.writeObject(X);
             //receber o Y do Bob;
             BigInteger Y = (BigInteger)fromBob.readObject();
-            
-            toBob.close();
-            fromBob.close();
-            
+             
             return Y;
             
         }catch(IOException e) {
@@ -91,8 +89,6 @@ public class ClienteAtivo extends Cliente {
     
     public String sendPuzzleGetPuzzle(ArrayList<String> puzzles) {
         try {
-            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
-            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
             
             //enviar todos os puzzles ao Bob
             toBob.writeObject(puzzles);
@@ -100,8 +96,6 @@ public class ClienteAtivo extends Cliente {
             //receber um puzzle do Bob
             String puzzle = (String) fromBob.readObject();
             
-            toBob.close();
-            fromBob.close();
             return puzzle;
             
         }catch(IOException e) {
@@ -115,8 +109,6 @@ public class ClienteAtivo extends Cliente {
     public byte[] sendPublicKeyGetSecretKey(PublicKey pk, PrivateKey sk) throws NoSuchAlgorithmException, Exception {
         // Alice envia ao bob a sua chave publica, bob gera uma chave simétrica, e cifra-a com a chave p
         try {
-            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
-            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
             
             // Enviar a chave pública ao Bob
             toBob.writeObject(pk);
@@ -128,9 +120,6 @@ public class ClienteAtivo extends Cliente {
                 buf.write(buffer, 0, s);
             }
             byte[] segredo = buf.toByteArray();
-            
-            fromBob.close();
-            toBob.close();
             
             byte[] chaveBob = AutoRSA.rsaDecrypt(segredo, sk);
             
@@ -144,8 +133,8 @@ public class ClienteAtivo extends Cliente {
     
     public SecretKey askServerForKeys() throws ClassNotFoundException {
         try {
-            ObjectOutputStream toServer =new ObjectOutputStream(super.getServerSocket().getOutputStream());
-            ObjectInputStream fromServer =new ObjectInputStream(super.getServerSocket().getInputStream());
+            toServer =new ObjectOutputStream(super.getServerSocket().getOutputStream());
+            fromServer =new ObjectInputStream(super.getServerSocket().getInputStream());
             // Enviar opcao para o servidor nos dar chaves
             toServer.write(3);
             // Enviar o socket do Bob
@@ -153,8 +142,6 @@ public class ClienteAtivo extends Cliente {
             // Receber chave do servidor
             SecretKey sk = (SecretKey)fromServer.readObject();
             
-            toServer.close();
-            fromServer.close();
             return sk;            
         }catch(IOException e) {
             System.out.println(e);
@@ -165,8 +152,6 @@ public class ClienteAtivo extends Cliente {
     
     public byte[] sendSecret_getSecretBYTE(byte[] criptograma) {
         try {
-            ObjectOutputStream toBob = new ObjectOutputStream(BobSS.getOutputStream());
-            ObjectInputStream fromBob = new ObjectInputStream(BobSS.getInputStream());
             //Enviar criptograma da alice ao bob
             toBob.write(criptograma);
             
@@ -177,8 +162,6 @@ public class ClienteAtivo extends Cliente {
             }
             byte[] segredo = buf.toByteArray();
             
-            fromBob.close();
-            toBob.close();
             return segredo;
             
         }catch(IOException e) {
