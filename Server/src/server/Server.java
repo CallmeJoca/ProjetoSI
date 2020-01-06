@@ -26,7 +26,7 @@ public class Server implements Runnable{
     private int portaAberta;
     private Socket clientSocket;
     private Thread t;
-    private ArrayList<String> users = new ArrayList<>();
+    private final  ArrayList<String> users = new ArrayList<>();
     
     private ObjectInputStream fromCliente;
     private ObjectOutputStream toCliente;
@@ -65,24 +65,24 @@ public class Server implements Runnable{
     public void run() {
         
         int option = -1;
-        String clientArrival;
+        String clientArrival = "";
         String data = "";
         
         //Primeiro contacto, cliente base estabelece ligação com servidor
         try {
-            clientArrival = fromCliente.readUTF();
-            System.out.println(clientArrival);
-            toCliente.writeUTF("Welcome, " + clientArrival);
-            System.out.println("erro3");
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            clientArrival = (String)fromCliente.readObject();
+            toCliente.writeObject("Welcome, " + clientArrival);
+        } catch (IOException | ClassNotFoundException ex) {
+            return;
         }
         
         while(true) {
             
             // Primeiro contacto que as subclasses cliente têm com o servidor
-            try { option = fromCliente.readInt(); } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            try { option = (int)fromCliente.readObject(); } catch (IOException ex) {
+                return;
+            }catch(ClassNotFoundException e) {
+                return;
             }
             
             switch (option) {
@@ -103,8 +103,8 @@ public class Server implements Runnable{
                     
                     try {
                         //Receber os dados do ClientePassivo que quer ser passivo
-                        data = fromCliente.readUTF();
-                    } catch (IOException ex) {
+                        data = (String)fromCliente.readObject();
+                    } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
