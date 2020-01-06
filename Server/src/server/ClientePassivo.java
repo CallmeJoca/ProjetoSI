@@ -162,7 +162,7 @@ public class ClientePassivo extends Cliente implements Runnable {
                 keyGen.init(256); // for example
                 SecretKey secretKey = keyGen.generateKey();
                 
-                //Receber a chave pública da Alice e cifrar a chave com ela
+                //Receber a chave pública da Alice e cifrar a sua chave publica com a chave pública da Alice
                 this.sendSecretKeyUsePublicKey(secretKey);
                 
                 // Queremos trocar criptogramas
