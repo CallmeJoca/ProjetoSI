@@ -204,7 +204,11 @@ public class XiuuuMain {
                                                         break;
                                                         
                                                     case 4: // Servidor fornecer chaves
-                                                        // Encadeamento para o servidor fornecer chaves
+                                                        // Usar as default Strings do servidor para aceitar chaves
+
+                                                        break;
+                                                        
+                                                    case 5: // Ser um Agente de Confiança
                                                         SecretKey skFromServer = activeClient.askServerForKeys();
                                                         
                                                         System.out.println("O que queres sussurrar?");
@@ -214,11 +218,6 @@ public class XiuuuMain {
                                                         byte[] criptograma3 = activeClient.sendSecret_getSecretBYTE(segredo4);
                                                         String plaintext3 = decryptTextAES(criptograma3, skFromServer);
                                                         System.out.println("Segredo recebido!\n ------> " + plaintext3);
-                                                        
-                                                        break;
-                                                        
-                                                    case 5: // Ser um Agente de Confiança
-                                                        // Servir de AC
                                                         // Queremos trocar uma chave secreta
                                                         System.out.println("O que queres sussurrar?");
                                                         break;
