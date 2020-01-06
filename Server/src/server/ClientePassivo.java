@@ -31,6 +31,9 @@ public class ClientePassivo extends Cliente implements Runnable {
     //Vão ser precisos mais alguns atributos
     private String AliceIpAddress;
     private Socket AliceSS;
+    private ObjectOutputStream toAlice;
+    private ObjectInputStream fromAlice;
+   
     
     
     public ClientePassivo() {}
@@ -43,16 +46,14 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     public boolean connectToAlice() throws ClassNotFoundException {
         try {
+            // Conecção principal
             AliceSS = new Socket(AliceIpAddress, this.getClientDoor());
-            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
-            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
+            toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
+            fromAlice = new ObjectInputStream(AliceSS.getInputStream());
             
             
             System.out.println((String)fromAlice.readObject());
             toAlice.writeObject("Oii chamo-me " + this.getUsername() + " e sou muita calado/a.");
-            
-            toAlice.close();
-            fromAlice.close();
             
             return true;
         }catch(IOException e) {
@@ -197,17 +198,12 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     public BigInteger sendYgetX(BigInteger Y) {
         try {
-            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
-            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
-            
             //receber o X da Alice;
             BigInteger X = (BigInteger)fromAlice.readObject();
             
             //enviar à alice o Y
             toAlice.writeObject(Y);
             
-            toAlice.close();
-            fromAlice.close();
             return X;
             
         }catch(IOException e) {
@@ -223,8 +219,6 @@ public class ClientePassivo extends Cliente implements Runnable {
         int totalPuzzles = 2000;
         int key_Length = 4;
         try {
-            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
-            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
             MerklePuzzle mkl = new MerklePuzzle();
             
             // Obter todos os puzzles
@@ -250,8 +244,6 @@ public class ClientePassivo extends Cliente implements Runnable {
             // Bob envia puzzle à Alice
             toAlice.writeObject(randomPuzzle);
             
-            toAlice.close();
-            fromAlice.close();
             return keyB;
             
         }catch(IOException e) {
@@ -265,9 +257,6 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     public void sendSecretKeyUsePublicKey(SecretKey simKey) throws ClassNotFoundException, Exception {
         try {
-            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
-            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
-            
             // Receber a chave pública da Alice
             PublicKey AlicePK= (PublicKey)fromAlice.readObject();
             
@@ -275,9 +264,6 @@ public class ClientePassivo extends Cliente implements Runnable {
             byte[] data = simKey.getEncoded();
             byte[] cipheredKey = AutoRSA.rsaEncrypt(data, AlicePK);
             toAlice.write(cipheredKey);
-            
-            toAlice.close();
-            fromAlice.close();
             
         }catch(IOException e) {
             System.out.println(e);
@@ -287,9 +273,6 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     public byte[] sendSecret_getSecretBYTE(byte[] criptograma) {
         try {
-            ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
-            ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
-            
             // Receber segredo da Alice
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
             byte buffer[] = new byte[1024];
@@ -300,9 +283,7 @@ public class ClientePassivo extends Cliente implements Runnable {
             
             //Enviar criptograma do Bob à Alice
             toAlice.write(criptograma);
-            
-            toAlice.close();
-            fromAlice.close();
+
             return segredo;
             
         }catch(IOException e) {
