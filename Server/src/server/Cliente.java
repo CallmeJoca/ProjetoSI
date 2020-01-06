@@ -29,8 +29,8 @@ public class Cliente {
     
     private Socket serverSocket;
     
-    private ObjectOutputStream toServer;
-    private ObjectInputStream fromServer;
+    protected ObjectOutputStream toServer;
+    protected ObjectInputStream fromServer;
 
     public ObjectInputStream getFromServer() {
         return fromServer;

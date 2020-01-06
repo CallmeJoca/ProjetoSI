@@ -88,7 +88,9 @@ public class XiuuuMain {
                         
                         int clientChoice1;
                         do {
+                            
                             clientChoice1 = clientOptions();
+                            
                             switch(clientChoice1) { //Entrar em que modo de cliente ativo ou passivo, ou fazer pbkdf2
                                 
                                 case 1: // Cliente Ativo
@@ -105,6 +107,7 @@ public class XiuuuMain {
                                                 clientChoice2 = activeClientOptions();
                                                 
                                                 // Enviar ao cliente passivo clientChoice2
+                                                activeClient.signal(clientChoice2);
                                                 
                                                 switch(clientChoice2) {
                                                     case 1: // Diffie Hellman

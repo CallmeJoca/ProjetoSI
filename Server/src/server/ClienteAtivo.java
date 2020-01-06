@@ -27,6 +27,8 @@ public class ClienteAtivo extends Cliente {
     
     public ClienteAtivo() {}
     
+    
+    
     public ClienteAtivo(Cliente cliente, String BobIpAddress) {
         
         super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
@@ -58,6 +60,11 @@ public class ClienteAtivo extends Cliente {
             Logger.getLogger(ClienteAtivo.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    // Sinala ai bob para começar as operações com ele
+    public void signal(int choice) throws IOException {
+        toBob.writeObject(choice);
     }
     
     public boolean closeBobConnection() {

@@ -97,12 +97,19 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     @Override
     public void run() {
-        //
-        //escolherTrocaSegredo()
+        int AliceChoice = -1;
+        try {
+            AliceChoice = (int)fromAlice.readObject();
+            escolherTrocaSegredo(AliceChoice);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ClientePassivo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ClientePassivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // Bob side of things
-    public byte[] escolherTrocaSegredo(int alg) throws Exception {
+    public void escolherTrocaSegredo(int alg) throws Exception {
         
         switch(alg) {
             
@@ -193,8 +200,6 @@ public class ClientePassivo extends Cliente implements Runnable {
                 
                 break;
         }
-        
-        return null;
     }
     
     public BigInteger sendYgetX(BigInteger Y) {
