@@ -31,16 +31,18 @@ public class ClientePassivo extends Cliente implements Runnable {
     //Vão ser precisos mais alguns atributos
     private String AliceIpAddress;
     private Socket AliceSS;
+    
     private ObjectOutputStream toAlice;
     private ObjectInputStream fromAlice;
-   
-    
-    
+
     public ClientePassivo() {}
     
     public ClientePassivo(Cliente cliente, String AliceIpAddress) {
         super(cliente.getUsername(), cliente.getServerIP(), cliente.getServerDoor(), cliente.getClientDoor());
+        super.setFromServer(cliente.getFromServer());
+        super.setToServer(cliente.getToServer());
         super.setServerSocket((cliente.getServerSocket()));
+        
         this.AliceIpAddress = AliceIpAddress;
     }
     
@@ -74,8 +76,7 @@ public class ClientePassivo extends Cliente implements Runnable {
     
     public boolean requestDelete() {
         try {
-            ObjectOutputStream toServer = new ObjectOutputStream(this.getServerSocket().getOutputStream());
-            ObjectInputStream fromServer = new ObjectInputStream(this.getServerSocket().getInputStream());
+            
             InetAddress inetAddress = InetAddress.getLocalHost();
             toServer.write(4);
             String info = this.getUsername() + "__" + inetAddress.getHostAddress();
