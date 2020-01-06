@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Read {
-    
+
     public static int readInt() {
-        
+
         while (true) {
             try {
                 return Integer.parseInt(readString().trim());
@@ -16,13 +16,13 @@ public class Read {
             }
         }
     }
-    
+
     public static String readString() {
         String str = null;
-        
-        while(true) {
+
+        while (true) {
             try {
-                BufferedReader bIn = new BufferedReader (new InputStreamReader(System.in));
+                BufferedReader bIn = new BufferedReader(new InputStreamReader(System.in));
                 str = bIn.readLine();
                 return str;
             } catch (IOException e) {
