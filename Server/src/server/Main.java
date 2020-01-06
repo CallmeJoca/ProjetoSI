@@ -10,12 +10,15 @@ public class Main {
         
         System.out.println("XIUUU: Troca de Segredos Criptográficos Seguro.");
         System.out.println("\n1 - Modo Cliente\n2 - Modo Servidor\n3 - Sair\n");
-        int n = Read.readInt();
+        int n = server.Read.readInt();
         
         if (n==1) {
-            Cliente.main(args);
+            server.Cliente.main(args);
+            //Não responsabilizo pela classe Cliente, todas as edições foram feitas no XiuuuMain
+            //Caso deseje uma duplicação do XiuuuMain avisa-me
+            //Por: Tiago
         }
-        
+
         // MUDAR PARA SERVER
         if (n==2) {
             Server.main(args);
