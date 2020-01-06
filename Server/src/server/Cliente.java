@@ -75,11 +75,14 @@ public class Cliente {
         
         try {
             serverSocket = new Socket(serverIP, serverDoor);
-            DataOutputStream dataOut = new DataOutputStream(serverSocket.getOutputStream());
-            dataOut.writeUTF(username + " conectou-se ao servidor.");
-            dataOut.flush();
+            ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
+            ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
+            toServer.writeUTF(username + " conectou-se ao servidor.");
+            System.out.println(fromServer.readUTF());
             
-            dataOut.close();
+            
+            toServer.close();
+            fromServer.close();
             
             return true;
             

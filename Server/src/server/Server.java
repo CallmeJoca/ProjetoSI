@@ -15,6 +15,8 @@ import javax.crypto.SecretKey;
 
 public class Server implements Runnable{
     
+    private final String forDistribution= "bobnopaísdasmaravilhas";
+    
     private ServerSocket sSocket;
     private int portaAberta;
     private Socket clientSocket;
@@ -97,8 +99,8 @@ public class Server implements Runnable{
                     
                     try {
                         //Receber os dados do ClientePassivo que quer ser passivo
-                        data = (String)fromCliente.readObject();
-                    } catch (IOException | ClassNotFoundException ex) {
+                        data = fromCliente.readUTF();
+                    } catch (IOException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
@@ -116,6 +118,7 @@ public class Server implements Runnable{
                     break;
                     
                 case 3:
+                    // Isto é o agente de confiaça
                     System.out.println("Distribuir chaves pelos clientes");
                     try {
                         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
