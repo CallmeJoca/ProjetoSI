@@ -2,7 +2,11 @@ package server;
 
 import java.math.BigInteger;
 import java.util.Random;
- 
+
+/**
+ *
+ * @author a39851
+ */ 
 public class RSA
 {
     BigInteger p;

@@ -1,14 +1,10 @@
 package server;
 
-import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
-import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import static server.AES.decryptTextAES;
