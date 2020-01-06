@@ -35,7 +35,7 @@ public class XiuuuMain {
         
         boolean newclient = true;
         int serverDoor = -1;
-        int clientDoor = 443; // A porta do TCP costuma estar sempre aberta
+        int clientDoor = 6666; // A porta do TCP costuma estar sempre aberta
         boolean connectedToServer, connectedToClient;
         
         String username = "", serverIP = "";

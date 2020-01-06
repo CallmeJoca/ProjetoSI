@@ -15,7 +15,12 @@ import javax.crypto.SecretKey;
 
 public class Server implements Runnable{
     
-    private final String forDistribution= "bobnopaísdasmaravilhas";
+    // Strings utilzadas para chave de sessão AC
+    public final String forBob = "bobnopaísdasmaravilhas";
+    public final String forAlice = "alicenopaisdasmaravilhas";
+    
+    // String utilzada para distribuição de chaves
+    public final String forcliente = "servidornopaisdasmaravilhas";
     
     private ServerSocket sSocket;
     private int portaAberta;
@@ -34,7 +39,6 @@ public class Server implements Runnable{
     
     public void startRunning() {
         
-        while(true) {
             System.out.println("Servidor está a correr silenciosamente... à espera de input");
             try {
                 sSocket = new ServerSocket(portaAberta);
@@ -49,8 +53,6 @@ public class Server implements Runnable{
             
             t = new Thread(this);
             t.start();
-            
-        }
     }
     
     
@@ -69,7 +71,9 @@ public class Server implements Runnable{
         //Primeiro contacto, cliente base estabelece ligação com servidor
         try {
             clientArrival = fromCliente.readUTF();
+            System.out.println(clientArrival);
             toCliente.writeUTF("Welcome, " + clientArrival);
+            System.out.println("erro3");
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,6 +123,7 @@ public class Server implements Runnable{
                     
                 case 3:
                     // Isto é o agente de confiaça
+                    // O servidor gera chaves aleatórios para enviar aos 2 clientes
                     System.out.println("Distribuir chaves pelos clientes");
                     try {
                         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -165,7 +170,12 @@ public class Server implements Runnable{
                         System.out.println(e);
                     }
                     
-                case 5:
+                    break;
+                    
+                case 5: //agente de confiança
+                    
+                    
+                case 6:
                     // Cliente a pedir para disconectar
                     try {
                         fromCliente.close();

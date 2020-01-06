@@ -11,7 +11,14 @@ import java.util.ArrayList;
 
 public class Cliente {
     
-    // Atributos básicos
+// Strings utilzadas para chave de sessão AC
+    public final String forBob = "bobnopaísdasmaravilhas";
+    public final String forAlice = "alicenopaisdasmaravilhas";
+    
+    // String utilzada para distribuição de chaves
+    public final String forcliente = "servidornopaisdasmaravilhas";    
+
+// Atributos básicos
     private String username;
     private String serverIP;
     private int serverDoor;
@@ -77,8 +84,10 @@ public class Cliente {
             serverSocket = new Socket(serverIP, serverDoor);
             ObjectOutputStream toServer = new ObjectOutputStream(serverSocket.getOutputStream());
             ObjectInputStream fromServer = new ObjectInputStream(serverSocket.getInputStream());
+           
             toServer.writeUTF(username + " conectou-se ao servidor.");
             System.out.println(fromServer.readUTF());
+            
             
             
             toServer.close();
