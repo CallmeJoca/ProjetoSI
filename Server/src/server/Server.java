@@ -38,26 +38,26 @@ public class Server implements Runnable {
         portaAberta = port;
     }
 
-    public void startRunning() {
-
-        System.out.println("Servidor está a correr silenciosamente... à espera de input");
-
+    public void startRunning() throws IOException {
         try {
+            System.out.println("Servidor está a correr silenciosamente... à espera de input");
             sSocket = new ServerSocket(portaAberta);
-            clientSocket = sSocket.accept();
+            while (true) {
 
-            fromCliente = new ObjectInputStream(clientSocket.getInputStream());
-            toCliente = new ObjectOutputStream(clientSocket.getOutputStream());
+                clientSocket = sSocket.accept();
+
+                fromCliente = new ObjectInputStream(clientSocket.getInputStream());
+                toCliente = new ObjectOutputStream(clientSocket.getOutputStream());
+
+                Thread t = new Thread(this);
+                threads.add(t);
+                t.start();
+            }
 
         } catch (IOException e) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
             return;
         }
-
-        Thread t = new Thread(this);
-        threads.add(t);
-        t.start();
-
     }
 
     public int printMenu(Socket clientInput) throws IOException, ClassNotFoundException {

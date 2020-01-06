@@ -287,7 +287,7 @@ public class XiuuuMain {
                                     break;
 
                             }// Fim do 2º switch
-                        } while (clientChoice1 >= 0 || clientChoice1 <= 3);// Fim do 2º while
+                        } while (clientChoice1 < 1 || clientChoice1 <= 3);// Fim do 2º while
                         // por tudo o que está em baixo
                     }
                     // Talvez declarar Clientes logo debaixo da main?
@@ -298,7 +298,7 @@ public class XiuuuMain {
                     System.out.println("xa..uu..u..");
                     break;
             }// fim do 1º switch
-        } while (choice >= 0 || choice <= 2); // 1º do while ciclo
+        } while (choice < 1 || choice > 2); // 1º do while ciclo
     }// Fim do main
 
     public static int mainmenu() {
