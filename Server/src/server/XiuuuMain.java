@@ -282,7 +282,7 @@ public class XiuuuMain {
                                     break;
                                     
                             }// Fim do 2º switch
-                        }while(clientChoice1 >= 0 || clientChoice1 <= 3);// Fim do 2º while
+                        }while(clientChoice1 < 0 || clientChoice1 > 3);// Fim do 2º while
                         // por tudo o que está em baixo
                     }
                     // Talvez declarar Clientes logo debaixo da main?
