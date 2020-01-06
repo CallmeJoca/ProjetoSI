@@ -1,14 +1,10 @@
 package server;
 
-import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
-import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import static server.AES.decryptTextAES;
@@ -146,7 +142,7 @@ public class XiuuuMain {
                                                         // Encadeamento para fazer os Puzzles de Merkle
                                                         
                                                         MerklePuzzle mkl = new MerklePuzzle();
-                                                        int totalPuzzles = 2000;
+                                                        int totalPuzzles = 2048;
                                                         int key_Length = 4;
                                                         
                                                         ArrayList<String> puzzles = new ArrayList<>();
@@ -190,7 +186,7 @@ public class XiuuuMain {
                                                     case 3: //RSA
                                                         //Encadeamento para fazer RSA
                                                         AutoRSA rsahalp = new AutoRSA();
-                                                        // Enviamos lhe a chame publica, usamos a privada para decifrar a chave que o Bob manda
+                                                        // Enviamos lhe a chave publica, usamos a chave privada para decifrar a chave que o Bob manda
                                                         byte[] bobkey = activeClient.sendPublicKeyGetSecretKey(rsahalp.pubK, rsahalp.privK);
                                                         SecretKeySpec secretKey = new SecretKeySpec(bobkey, "AES");
                                                         

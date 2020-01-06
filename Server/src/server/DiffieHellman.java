@@ -3,7 +3,10 @@ package server;
 import java.math.BigInteger;
 import java.util.Random;
 
-
+/**
+ *
+ * @author a39851
+ */
 public class DiffieHellman {
     
     private int bitlength = 1024;

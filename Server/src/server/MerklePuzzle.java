@@ -12,7 +12,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
-
+/**
+ *
+ * @author a39851
+ */
 public class MerklePuzzle {
     
     Cipher cipher;

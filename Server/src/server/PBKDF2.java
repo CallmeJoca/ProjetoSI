@@ -20,6 +20,10 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ *
+ * @author a39782
+ */
 public class PBKDF2 {
     
     private static final Random RANDOM = new SecureRandom();

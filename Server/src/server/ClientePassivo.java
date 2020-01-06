@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -16,7 +15,6 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -164,7 +162,7 @@ public class ClientePassivo extends Cliente implements Runnable {
                 keyGen.init(256); // for example
                 SecretKey secretKey = keyGen.generateKey();
                 
-                //Receber a chave pública da Alice e cifrar a chave com ela
+                //Receber a chave pública da Alice e cifrar a sua chave publica com a chave pública da Alice
                 this.sendSecretKeyUsePublicKey(secretKey);
                 
                 // Queremos trocar criptogramas
