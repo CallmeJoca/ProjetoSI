@@ -41,15 +41,15 @@ public class ClientePassivo extends Cliente implements Runnable {
         this.AliceIpAddress = AliceIpAddress;
     }
     
-    public boolean connectToAlice() {
+    public boolean connectToAlice() throws ClassNotFoundException {
         try {
             AliceSS = new Socket(AliceIpAddress, this.getClientDoor());
             ObjectOutputStream toAlice = new ObjectOutputStream(AliceSS.getOutputStream());
             ObjectInputStream fromAlice = new ObjectInputStream(AliceSS.getInputStream());
             
             
-            System.out.println(fromAlice.readUTF());
-            toAlice.writeUTF("Oii chamo-me " + this.getUsername() + " e sou muita calado/a.");
+            System.out.println((String)fromAlice.readObject());
+            toAlice.writeObject("Oii chamo-me " + this.getUsername() + " e sou muita calado/a.");
             
             toAlice.close();
             fromAlice.close();
@@ -78,7 +78,7 @@ public class ClientePassivo extends Cliente implements Runnable {
             InetAddress inetAddress = InetAddress.getLocalHost();
             toServer.write(4);
             String info = this.getUsername() + "__" + inetAddress.getHostAddress();
-            toServer.writeUTF(info);
+            toServer.writeObject(info);
             
             // Server check
             boolean serverCheck = fromServer.readBoolean();
