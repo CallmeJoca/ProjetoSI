@@ -1,0 +1,36 @@
+package server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Read {
+
+    // Ler Int, devolver Int
+    public static int readInt() {
+
+        while (true) {
+            try {
+                return Integer.parseInt(readString().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Not an Integer.");
+            }
+        }
+    }
+
+    
+    // Ler string, devolve String
+    public static String readString() {
+        String str = null;
+
+        while (true) {
+            try {
+                BufferedReader bIn = new BufferedReader(new InputStreamReader(System.in));
+                str = bIn.readLine();
+                return str;
+            } catch (IOException e) {
+                System.out.println("Not a String.");
+            }
+        }
+    }
+}
